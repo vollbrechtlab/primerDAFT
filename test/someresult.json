@@ -1,0 +1,157 @@
+{
+    "result": {
+        "pairs": [
+            {
+                "COMPL_ANY_TH": 0.0,
+                "COMPL_END_TH": 0.0,
+                "PENALLTY": 0.07315300020729865,
+                "PRIMER_LEFT": {
+                    "END_STABILITY": 3.57,
+                    "GC_PERCENT": 55.0,
+                    "HAIRPIN_TH": 0.0,
+                    "LENGTH": 20,
+                    "PENALTY": 0.036764687686229536,
+                    "SELF_ANY_TH": 0.0,
+                    "SELF_END_TH": 0.0,
+                    "SEQUENCE": "GCTCCAACCCACATCACGTA",
+                    "START": 1143,
+                    "TM": 60.03676468768623
+                },
+                "PRIMER_RIGHT": {
+                    "END_STABILITY": 4.79,
+                    "GC_PERCENT": 55.0,
+                    "HAIRPIN_TH": 38.07927744765584,
+                    "LENGTH": 20,
+                    "PENALTY": 0.03638831252106911,
+                    "SELF_ANY_TH": 0.0,
+                    "SELF_END_TH": 0.0,
+                    "SEQUENCE": "TGACTTTGCTGGGATCGACC",
+                    "START": 1404,
+                    "TM": 60.03638831252107
+                },
+                "PRODUCT_SIZE": 262
+            },
+            {
+                "COMPL_ANY_TH": 7.181595768719774,
+                "COMPL_END_TH": 0.0,
+                "PENALLTY": 0.14256852379827478,
+                "PRIMER_LEFT": {
+                    "END_STABILITY": 3.09,
+                    "GC_PERCENT": 55.0,
+                    "HAIRPIN_TH": 0.0,
+                    "LENGTH": 20,
+                    "PENALTY": 0.037160181386980184,
+                    "SELF_ANY_TH": 0.0,
+                    "SELF_END_TH": 0.0,
+                    "SEQUENCE": "GGAAAGGGGAACACGGCTAA",
+                    "START": 126,
+                    "TM": 59.96283981861302
+                },
+                "PRIMER_RIGHT": {
+                    "END_STABILITY": 6.13,
+                    "GC_PERCENT": 55.0,
+                    "HAIRPIN_TH": 0.0,
+                    "LENGTH": 20,
+                    "PENALTY": 0.1054083424112946,
+                    "SELF_ANY_TH": 0.0,
+                    "SELF_END_TH": 0.0,
+                    "SEQUENCE": "ACGTACCCATCATTACCGGC",
+                    "START": 240,
+                    "TM": 59.894591657588705
+                },
+                "PRODUCT_SIZE": 115
+            },
+            {
+                "COMPL_ANY_TH": 0.0,
+                "COMPL_END_TH": 0.0,
+                "PENALLTY": 0.14293723368353994,
+                "PRIMER_LEFT": {
+                    "END_STABILITY": 4.63,
+                    "GC_PERCENT": 55.0,
+                    "HAIRPIN_TH": 39.62741374106355,
+                    "LENGTH": 20,
+                    "PENALTY": 0.03489583548724795,
+                    "SELF_ANY_TH": 9.463168145811721,
+                    "SELF_END_TH": 1.2583187012418762,
+                    "SEQUENCE": "AAGTGGCTACAACACCGGAG",
+                    "START": 196,
+                    "TM": 59.96510416451275
+                },
+                "PRIMER_RIGHT": {
+                    "END_STABILITY": 2.73,
+                    "GC_PERCENT": 55.0,
+                    "HAIRPIN_TH": 42.243683901827126,
+                    "LENGTH": 20,
+                    "PENALTY": 0.108041398196292,
+                    "SELF_ANY_TH": 16.642546082200624,
+                    "SELF_END_TH": 0.0,
+                    "SEQUENCE": "CCGGCCAACGTTACTGGTAT",
+                    "START": 430,
+                    "TM": 60.10804139819629
+                },
+                "PRODUCT_SIZE": 235
+            },
+            {
+                "COMPL_ANY_TH": 0.0,
+                "COMPL_END_TH": 0.0,
+                "PENALLTY": 0.14575652960968455,
+                "PRIMER_LEFT": {
+                    "END_STABILITY": 4.69,
+                    "GC_PERCENT": 55.0,
+                    "HAIRPIN_TH": 39.42075359568372,
+                    "LENGTH": 20,
+                    "PENALTY": 0.10899184192345501,
+                    "SELF_ANY_TH": 0.0,
+                    "SELF_END_TH": 0.0,
+                    "SEQUENCE": "GAATGTGCGTGGACTACCGA",
+                    "START": 910,
+                    "TM": 60.108991841923455
+                },
+                "PRIMER_RIGHT": {
+                    "END_STABILITY": 4.7,
+                    "GC_PERCENT": 55.0,
+                    "HAIRPIN_TH": 0.0,
+                    "LENGTH": 20,
+                    "PENALTY": 0.036764687686229536,
+                    "SELF_ANY_TH": 0.0,
+                    "SELF_END_TH": 0.0,
+                    "SEQUENCE": "TACGTGATGTGGGTTGGAGC",
+                    "START": 1162,
+                    "TM": 60.03676468768623
+                },
+                "PRODUCT_SIZE": 253
+            },
+            {
+                "COMPL_ANY_TH": 0.0,
+                "COMPL_END_TH": 0.0,
+                "PENALLTY": 0.14575652960968455,
+                "PRIMER_LEFT": {
+                    "END_STABILITY": 3.18,
+                    "GC_PERCENT": 55.0,
+                    "HAIRPIN_TH": 0.0,
+                    "LENGTH": 20,
+                    "PENALTY": 0.10899184192345501,
+                    "SELF_ANY_TH": 0.0,
+                    "SELF_END_TH": 0.0,
+                    "SEQUENCE": "TCGAATGTGCGTGGACTACC",
+                    "START": 908,
+                    "TM": 60.108991841923455
+                },
+                "PRIMER_RIGHT": {
+                    "END_STABILITY": 4.7,
+                    "GC_PERCENT": 55.0,
+                    "HAIRPIN_TH": 0.0,
+                    "LENGTH": 20,
+                    "PENALTY": 0.036764687686229536,
+                    "SELF_ANY_TH": 0.0,
+                    "SELF_END_TH": 0.0,
+                    "SEQUENCE": "TACGTGATGTGGGTTGGAGC",
+                    "START": 1162,
+                    "TM": 60.03676468768623
+                },
+                "PRODUCT_SIZE": 255
+            }
+        ]
+    },
+    "status": "ok"
+}
