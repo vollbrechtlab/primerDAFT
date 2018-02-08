@@ -254,13 +254,15 @@ def get_offtarget_attrs(off_target,side,idx):
 
 
 
-def spec_check():
+def specCheck(taskPath, taskResultPath):
 	'''
 	Dealing with input files both task and task results
 	'''
-	data_file='cache/0Y7Cnlt4E37SP2W9_taskResult.json'
+	#data_file='cache/0Y7Cnlt4E37SP2W9_taskResult.json'
+	data_file = taskResultPath
 	tmp_id=re.sub("_.+","",data_file)
-	task_data_file=tmp_id+"_task.json"
+	#task_data_file=tmp_id+"_task.json"
+	task_data_file = taskPath
 
 	with open(data_file) as data_file:
 	    data = json.load(data_file)
@@ -409,3 +411,7 @@ def spec_check():
 	pp.pprint(out_json)
 	json.dump(data,out_json,indent="\t",sort_keys=True)
 	out_json.close()
+
+
+def run():
+	pass

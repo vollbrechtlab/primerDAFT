@@ -11,6 +11,7 @@ setup(name='primer blast dx',
       install_requires=[
           'primer3-py',
           'biopython',
-          'pandas'
+          'pandas',
+          'pysam'
       ],
       zip_safe=False)
