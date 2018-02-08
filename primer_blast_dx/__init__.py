@@ -8,7 +8,7 @@ import json
 
 def transformInput(data):
     """ separate input to seq_args and global_args
-    Args: 
+    Args:
         param1: input data
     Returns:
         separated input data
@@ -27,7 +27,7 @@ def transformInput(data):
 
 def createBetterResult(result):
     """ Create a primer3 result in a better format
-    Args: 
+    Args:
         param1: primer3 result
     Returns:
         better result
@@ -82,13 +82,13 @@ def createBetterResult(result):
         betterResult['pairs'][i]['PRIMER_INTERNAL']['SELF_END_TH'] = result['PRIMER_INTERNAL_{}_SELF_END_TH'.format(i)]
         betterResult['pairs'][i]['PRIMER_INTERNAL']['SEQUENCE'] = result['PRIMER_INTERNAL_{}_SEQUENCE'.format(i)]
         betterResult['pairs'][i]['PRIMER_INTERNAL']['TM'] = result['PRIMER_INTERNAL_{}_TM'.format(i)]
-    
+
     return betterResult
 
 
 def findPrimers(inputData, resultFormat="raw"):
     """ return primer3 result with given format
-    Args: 
+    Args:
         param1: input data
         param2: result format (raw/better)
     Returns:
@@ -110,7 +110,7 @@ def findPrimers(inputData, resultFormat="raw"):
 
 def findPrimersFile(taskPath, taskResultPath):
     """ Create a primer3 result in a better format
-    Args: 
+    Args:
         param1: task ID
     """
 
@@ -121,7 +121,7 @@ def findPrimersFile(taskPath, taskResultPath):
     #taskResultPath = os.path.basename(taskPath) + ".result.json"
 
     taskFile = None
-    try: 
+    try:
         taskFile = open(taskPath, 'r')
     except IOError as e:
         raise Exception("input file does not exist")
@@ -138,11 +138,11 @@ def findPrimersFile(taskPath, taskResultPath):
             taskResult['result'] = findPrimers(task['input_data'], task['format'])
         else:
             taskResult['result'] = findPrimers(task['input_data'])
-    
+
     except Exception as e:
         taskResult['status'] = 'error'
         taskResult['error_statement'] = str(e)
-    
+
     else: # no problem
         taskResult['status'] = 'ok'
 
@@ -393,28 +393,26 @@ def specCheck(taskPath, taskResultPath):
             off_target_dict = {"left":{},"right":{},"target_seq":"","prod_size":0}
             off_target_dict["left"] = get_offtarget_attrs(off_target,"left",x,data,side_cols,target_cols,pysam_fasta)
             off_target_dict["right"] = get_offtarget_attrs(off_target,"right",x,data,side_cols,target_cols,pysam_fasta)
-            
-            print(off_target_dict["left"]["strand"] )
+
             if off_target_dict["left"]["strand"] is "+":
                 gen_start=off_target_dict["left"]["start"]
                 gen_end=off_target_dict["right"]["start"]
             else:
                 gen_start=off_target_dict["right"]["start"]
                 gen_end=off_target_dict["left"]["start"]
-            
-            
 
             off_target_dict["prod_size"] = gen_end - gen_start + 1
             region=off_target_dict["left"]["chr"]+":"+str(gen_start)+"-"+str(gen_end)
-            print(region)
-            off_target_dict["target_seq"] = pysam_fasta.fetch(region=region)
-            all_off_targets.append(off_target_dict)
-        
+
+            if gen_start < gen_end:
+                off_target_dict["target_seq"] = pysam_fasta.fetch(region=region)
+                all_off_targets.append(off_target_dict)
+
         data["result"]["pairs"][x]["all_targets"]["off_targets"] = all_off_targets
 
 
     out_json=open(tmp_id+".out.json","w")
-    pp.pprint(out_json)
+    #pp.pprint(data)
     json.dump(data,out_json,indent="\t",sort_keys=True)
     out_json.close()
 
