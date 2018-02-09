@@ -1,8 +1,24 @@
 # Primer-Blast-DX
 
+PCR Primer package written in Python3
+
+## Setup
 Install blastn from here
 ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
 
-Change the content of genome_config.json
+Make a file called genome_config.json which contains the locations to fasta genome files.
+Example:
+```
+{
+    "maize_v3":"/home/takaos/fa/Zea_mays.AGPv3.29.dna.genome.fa"
+}
+```
 
+## Install
+```
+python setup.py install
+```
+Install package as development (This only creates symlinks)
+```
 python setup.py development
+```
