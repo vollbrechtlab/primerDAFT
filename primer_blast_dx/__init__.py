@@ -86,7 +86,7 @@ def createBetterResult(result):
     return betterResult
 
 
-def findPrimers(inputData, resultFormat="raw"):
+def findPrimers(inputData, resultFormat="better"):
     """ return primer3 result with given format
     Args:
         param1: input data
@@ -411,11 +411,23 @@ def specCheck(taskPath, taskResultPath):
         data["result"]["pairs"][x]["all_targets"]["off_targets"] = all_off_targets
 
 
-    out_json=open(tmp_id+".out.json","w")
-    #pp.pprint(data)
-    json.dump(data,out_json,indent="\t",sort_keys=True)
-    out_json.close()
+    return data
 
+def run(task, saveTmp=True):
+    """ run findPrimers and specCheck
+    Args:
+        task (dic): task data
+        saveTmp (bool): true if user wants to save temporary files
+    Returns:
+        dic: result dictionary 
+    """
 
-def run():
-    pass
+    pResult = findPrimers(task['input_data'])
+     # save the result to a file
+    if saveTmp == True:
+    with open(taskResultPath, 'w') as newTaskResultFile:
+        json.dump(taskResult, newTaskResultFile, sort_keys = True, indent = 4, ensure_ascii = False)
+    
+    specResult = specCheck(task['spec_check'])
+
+    return specResult
