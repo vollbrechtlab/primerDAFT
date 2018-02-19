@@ -6,9 +6,14 @@ import json
 
 #primer_blast_dx.findPrimersFile("0Y7Cnlt4E37SP2W9_task.json", "someresult.json")
 
-def test_specCheck():
+def test1_specCheck():
     result = primer_blast_dx.specCheck("0Y7Cnlt4E37SP2W9_task.json", "someresult.json")
     print(result)
+
+def test2_specCheck():
+    result = primer_blast_dx.specCheck("0Y7Cnlt4E37SP2W9_task.json", "0Y7Cnlt4E37SP2W9_taskResult.json")
+    print(result)
+
 
 def test_findPrimers():
 
@@ -28,6 +33,8 @@ def test_run():
     print(result)
 
 test_run()
+
+#test1_specCheck()
 
 
 """

@@ -107,6 +107,27 @@ def findPrimers(inputData, resultFormat="better"):
 
     return result
 
+def findPrimersFromTask(task):
+    """ return primer3 result from task. Checks exception
+    Args:
+        inputData: input data
+    Returns:
+        task result
+    """
+
+    taskResult = {}
+    try: # try to get result
+        taskResult['result'] = findPrimers(task['input_data'], task['format'])
+
+    except Exception as e:
+        taskResult['status'] = 'error'
+        taskResult['error_statement'] = str(e)
+
+    else: # no problem
+        taskResult['status'] = 'ok'
+
+    return taskResult
+
 
 def findPrimersFile(taskPath, taskResultPath):
     """ find primers from the task file and store the result to a task result file
@@ -251,22 +272,16 @@ def get_offtarget_attrs(off_target,side,idx,data,side_cols,target_cols,pysam_fas
     return(out_dict)
 
 
-def specCheck(taskPath, taskResultPath):
+def specCheck(task, taskResult):
     '''
     Dealing with input files both task and task results
     '''
-    #data_file='cache/0Y7Cnlt4E37SP2W9_taskResult.json'
-    data_file = taskResultPath
-    #tmp_id=re.sub("_.+","",data_file)
-    #task_data_file=tmp_id+"_task.json"
-    task_data_file = taskPath
 
-    with open(data_file) as data_file:
-        data = json.load(data_file)
-    with open(task_data_file) as data_file:
-        task_data = json.load(data_file)
     with open('genome_config.json') as genome_config_file:
         genome_config = json.load(genome_config_file)
+
+    task_data = task
+    data = taskResult
 
     tmp_id = task_data['task_id'] + "_taskResult.json"
 
@@ -421,12 +436,12 @@ def run(task):
         dic: result dictionary 
     """
 
-    taskResult = findPrimers(task['input_data'])
+    taskResult = findPrimersFromTask(task)
     taskResultPath = task['task_id'] + "_taskResult.json"
      # save the primer result to a file
     with open(taskResultPath, 'w') as newTaskResultFile:
         json.dump(taskResult, newTaskResultFile, sort_keys = True, indent = 4, ensure_ascii = False)
     
-    specResult = specCheck(task['spec_check'], taskResultPath)
+    specResult = specCheck(task, taskResult)
 
     return specResult
