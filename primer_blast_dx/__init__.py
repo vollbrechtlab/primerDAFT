@@ -9,7 +9,7 @@ import json
 def transformInput(data):
     """ separate input to seq_args and global_args
     Args:
-        param1: input data
+        data: input data
     Returns:
         separated input data
     """
@@ -28,7 +28,7 @@ def transformInput(data):
 def createBetterResult(result):
     """ Create a primer3 result in a better format
     Args:
-        param1: primer3 result
+        result: primer3 result
     Returns:
         better result
     """
@@ -89,8 +89,8 @@ def createBetterResult(result):
 def findPrimers(inputData, resultFormat="better"):
     """ return primer3 result with given format
     Args:
-        param1: input data
-        param2: result format (raw/better)
+        inputData: input data
+        resultFormat: result format (raw/better)
     Returns:
         result
     """
@@ -109,9 +109,10 @@ def findPrimers(inputData, resultFormat="better"):
 
 
 def findPrimersFile(taskPath, taskResultPath):
-    """ Create a primer3 result in a better format
+    """ find primers from the task file and store the result to a task result file
     Args:
-        param1: task ID
+        taskPath: location of the task file
+        taskResultPath: location of the task result file to store
     """
 
     #taskPath = 'cache/'+taskId+'_task.json'
@@ -188,8 +189,6 @@ def get_masked_seq(primer_seq,genome_seq):
     return(out_seq)
 
 
-
-
 def get_target_attrs(target,side,idx,data,side_cols,target_cols,pysam_fasta):
     primer_seq = data["result"]["pairs"][idx]["PRIMER_"+side.upper()]["SEQUENCE"]
     attr_names=["sseqid","sstart","send","strand"]
@@ -214,7 +213,6 @@ def get_target_attrs(target,side,idx,data,side_cols,target_cols,pysam_fasta):
     out_dict["masked_seq"] = str(masked_seq)
     out_dict["match_seq"] = str(match_seq)
     return(out_dict)
-
 
 
 def get_offtarget_attrs(off_target,side,idx,data,side_cols,target_cols,pysam_fasta):
@@ -253,14 +251,13 @@ def get_offtarget_attrs(off_target,side,idx,data,side_cols,target_cols,pysam_fas
     return(out_dict)
 
 
-
 def specCheck(taskPath, taskResultPath):
     '''
     Dealing with input files both task and task results
     '''
     #data_file='cache/0Y7Cnlt4E37SP2W9_taskResult.json'
     data_file = taskResultPath
-    tmp_id=re.sub("_.+","",data_file)
+    #tmp_id=re.sub("_.+","",data_file)
     #task_data_file=tmp_id+"_task.json"
     task_data_file = taskPath
 
@@ -270,6 +267,8 @@ def specCheck(taskPath, taskResultPath):
         task_data = json.load(data_file)
     with open('genome_config.json') as genome_config_file:
         genome_config = json.load(genome_config_file)
+
+    tmp_id = task_data['task_id'] + "_taskResult.json"
 
 
     '''
@@ -384,7 +383,6 @@ def specCheck(taskPath, taskResultPath):
     off_targets = c[(abs(c.sstart_left-c.sstart_right)<task_data["spec_check"]["MAX_TARGET_SIZE"]) & (c.strand_left != c.strand_right)]
 
 
-
     for x in list(pd.unique(off_targets["pair"])):
         x = int(x)
         curr_targets = off_targets[off_targets.pair==str(x)].reset_index(None)
@@ -410,10 +408,11 @@ def specCheck(taskPath, taskResultPath):
 
         data["result"]["pairs"][x]["all_targets"]["off_targets"] = all_off_targets
 
-
     return data
 
-def run(task, saveTmp=True):
+
+
+def run(task):
     """ run findPrimers and specCheck
     Args:
         task (dic): task data
@@ -422,12 +421,12 @@ def run(task, saveTmp=True):
         dic: result dictionary 
     """
 
-    pResult = findPrimers(task['input_data'])
-     # save the result to a file
-    if saveTmp == True:
+    taskResult = findPrimers(task['input_data'])
+    taskResultPath = task['task_id'] + "_taskResult.json"
+     # save the primer result to a file
     with open(taskResultPath, 'w') as newTaskResultFile:
         json.dump(taskResult, newTaskResultFile, sort_keys = True, indent = 4, ensure_ascii = False)
     
-    specResult = specCheck(task['spec_check'])
+    specResult = specCheck(task['spec_check'], taskResultPath)
 
     return specResult
