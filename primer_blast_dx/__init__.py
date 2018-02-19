@@ -341,8 +341,10 @@ def specCheck(task, taskResult):
     SeqIO.write(seqs,primer_fa,"fasta")
 
 
+    blastPath = os.path.dirname(__file__) + "/blastn"
+    print(blastPath)
     #Run biopython BLASTN
-    blast_cline = NcbiblastnCommandline(query=primer_fa,db=genome_fasta, task="blastn-short",outfmt=out_fmt,evalue=150,num_threads=4)
+    blast_cline = NcbiblastnCommandline(cmd=blastPath,query=primer_fa,db=genome_fasta, task="blastn-short",outfmt=out_fmt,evalue=150,num_threads=4)
     stdout, stderr = blast_cline()
 
     pd_data = StringIO(stdout)
