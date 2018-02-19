@@ -1,0 +1,9 @@
+biopython==1.70
+numpy==1.14.0
+pandas==0.22.0
+-e git+https://github.com/takao42/primer-blast-dx@88180b02dc7fc7147bc16a54fdfc7d987a8a8f8c#egg=primer_blast_dx
+primer3-py==0.5.5
+pysam==0.13
+python-dateutil==2.6.1
+pytz==2017.3
+six==1.11.0
