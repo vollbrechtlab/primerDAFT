@@ -10,7 +10,7 @@ Make a file called genome_config.json which contains the locations to fasta geno
 Example:
 ```
 {
-    "maize_v3":"/home/takaos/fa/Zea_mays.AGPv3.29.dna.genome.fa"
+    "maize_v3":"fa/Zea_mays.AGPv3.29.dna.genome.fa"
 }
 ```
 
@@ -22,3 +22,11 @@ Install package as development (This only creates symlinks)
 ```
 python setup.py development
 ```
+
+# How to Run
+```
+import primer_blast_dx
+taskResult = primer_blast_dx.run(task)
+```
+
+Take a look at test code for more detail

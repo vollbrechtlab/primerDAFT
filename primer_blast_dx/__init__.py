@@ -117,7 +117,10 @@ def findPrimersFromTask(task):
 
     taskResult = {}
     try: # try to get result
-        taskResult['result'] = findPrimers(task['input_data'], task['format'])
+        if 'format' in task:
+            taskResult['result'] = findPrimers(task['input_data'], task['format'])
+        else:
+            taskResult['result'] = findPrimers(task['input_data'])
 
     except Exception as e:
         taskResult['status'] = 'error'
