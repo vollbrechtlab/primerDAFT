@@ -280,8 +280,8 @@ def specCheck(task, taskResult):
     Dealing with input files both task and task results
     '''
 
-    with open('genome_config.json') as genome_config_file:
-        genome_config = json.load(genome_config_file)
+    with open('config.json') as config_file:
+        config = json.load(config_file)
 
     task_data = task
     data = taskResult
@@ -297,8 +297,14 @@ def specCheck(task, taskResult):
     blast_cols = ["qseqid","qseq","qlen","qstart","qend","sseqid","sseq","sstart","send","length","mismatch","evalue"]
     out_fmt="'6 "+" ".join(blast_cols)+"'"
     num_primer_pairs = len(data["result"]["pairs"])
-    genome_fasta = genome_config[task_data["spec_check"]["GENOME"]]
+    genome_fasta = config[task_data["spec_check"]["GENOME"]]
     pysam_fasta = pysam.FastaFile(genome_fasta)
+
+    blastPath = os.path.dirname(__file__) + "/blastn"
+    if "blastn_path" in config and config["blastn_path"] is not None:
+        blastPath = config["blastn_path"]
+    
+    print("using " + blastPath)
 
 
     '''
@@ -341,8 +347,7 @@ def specCheck(task, taskResult):
     SeqIO.write(seqs,primer_fa,"fasta")
 
 
-    blastPath = os.path.dirname(__file__) + "/blastn"
-    print(blastPath)
+
     #Run biopython BLASTN
     blast_cline = NcbiblastnCommandline(cmd=blastPath,query=primer_fa,db=genome_fasta, task="blastn-short",outfmt=out_fmt,evalue=150,num_threads=4)
     stdout, stderr = blast_cline()

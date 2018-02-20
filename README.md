@@ -3,10 +3,14 @@
 PCR Primer package written in Python3
 
 ## Setup
-Make a file called genome_config.json which contains the locations to fasta genome files.
+Make a file called config.json which contains the locations of the blastn and fasta genome files.
+
+This packages uses ncbi-blast-2.7.1 downloaded from [here](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/).
+
 Example:
 ```
 {
+    "blastn-path": null,
     "maize_v3":"fa/Zea_mays.AGPv3.29.dna.genome.fa"
 }
 ```
@@ -38,7 +42,7 @@ Take a look at test code for more detail
 
 # Technical Info
 
-This packages uses ncbi-blast-2.7.1 downloaded from [here](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/).
+
 
 # Authors
 Takao Shibamoto
