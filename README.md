@@ -28,7 +28,7 @@ python setup.py install
 
 Install package as development (This only creates symlinks)
 ```
-python setup.py development
+python setup.py develop
 ```
 
 # How to Run
