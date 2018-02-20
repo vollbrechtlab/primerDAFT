@@ -6,6 +6,7 @@ PCR Primer package written in Python3
 Make a file called config.json which contains the locations of the blastn and fasta genome files.
 
 This packages uses ncbi-blast-2.7.1 downloaded from [here](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/).
+It is compiled for linux 64x. If your environment is different, specify the path to blastn in config.json.
 
 Example:
 ```
