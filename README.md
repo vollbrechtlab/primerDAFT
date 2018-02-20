@@ -1,4 +1,4 @@
-# Primer-Blast-DX
+# Primer Blast DX
 
 PCR Primer package written in Python3
 
@@ -40,10 +40,6 @@ taskResult = primer_blast_dx.run(task)
 ```
 
 Take a look at test code for more detail
-
-# Technical Info
-
-
 
 # Authors
 Takao Shibamoto
