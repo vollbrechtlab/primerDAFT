@@ -15,9 +15,17 @@ Example:
 ```
 
 ## Install
+(Optional: virtual environment)
+```
+virtualenv -p python3 venv
+source venv/bin/activate
+```
+
+Install package
 ```
 python setup.py install
 ```
+
 Install package as development (This only creates symlinks)
 ```
 python setup.py development
