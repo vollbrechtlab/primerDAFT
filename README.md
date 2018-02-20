@@ -3,9 +3,6 @@
 PCR Primer package written in Python3
 
 ## Setup
-Install blastn from here
-ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
-
 Make a file called genome_config.json which contains the locations to fasta genome files.
 Example:
 ```
@@ -38,3 +35,11 @@ taskResult = primer_blast_dx.run(task)
 ```
 
 Take a look at test code for more detail
+
+# Technical Info
+
+This packages uses ncbi-blast-2.7.1 downloaded from [here](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/).
+
+# Authors
+Takao Shibamoto
+Kokulapalan (Gokul) Wimalanathan
