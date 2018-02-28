@@ -3,12 +3,12 @@ def createBetterResult(result):
 
     Parameters
     ----------
-    result : dict  
+    result : dict
         primer3 result.
 
     Returns
     -------
-    betterResult : dict  
+    betterResult : dict
         primer3 better results
 
     """

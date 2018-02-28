@@ -14,7 +14,7 @@ def findPrimers(inputData, resultFormat="better"):
 
     Returns
     ----------
-    result :
+    result : sad
     """
     p3pyInputData = transformInput(inputData)
 
