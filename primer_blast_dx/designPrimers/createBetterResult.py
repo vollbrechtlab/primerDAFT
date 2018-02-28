@@ -10,6 +10,7 @@ def createBetterResult(result):
     -------
     betterResult: dict
         primer3 better results
+    
     """
 
     betterResult = {}
