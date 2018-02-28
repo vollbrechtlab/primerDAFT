@@ -4,12 +4,17 @@ from primer_blast_dx.designPrimers.createBetterResult import createBetterResult
 
 def findPrimers(inputData, resultFormat="better"):
     """ return primer3 result with given format
-    
-    Args:
-        inputData: input data
-        resultFormat: result format (raw/better)
-    Returns:
-        result
+
+    Parameters
+    ----------
+    inputData: input data
+        asd
+    resultFormat: result format (raw/better),optional
+        sadsa
+
+    Returns
+    ----------
+    result:
     """
     p3pyInputData = transformInput(inputData)
 

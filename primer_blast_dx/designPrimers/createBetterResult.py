@@ -1,10 +1,15 @@
 def createBetterResult(result):
     """ Create a primer3 result in a better format
 
-    Args:
-        result: primer3 result
-    Returns:
-        better result
+    Parameters
+    ----------
+    result: dict
+        primer3 result
+
+    Returns
+    -------
+    betterResult: dict
+        primer3 better results
     """
 
     betterResult = {}
