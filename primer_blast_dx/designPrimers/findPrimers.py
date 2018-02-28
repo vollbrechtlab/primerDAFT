@@ -7,14 +7,14 @@ def findPrimers(inputData, resultFormat="better"):
 
     Parameters
     ----------
-    inputData: input data
-        asd  
-    resultFormat: result format (raw/better),optional
+    inputData : input data
+        asd
+    resultFormat : result format (raw/better),optional
         sadsa
 
     Returns
     ----------
-    result:
+    result :
     """
     p3pyInputData = transformInput(inputData)
 

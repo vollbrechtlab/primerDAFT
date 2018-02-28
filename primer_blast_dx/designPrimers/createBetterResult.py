@@ -8,7 +8,7 @@ def createBetterResult(result):
 
     Returns
     -------
-    betterResult: dict
+    betterResult : dict 
         primer3 better results
 
     """
