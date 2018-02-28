@@ -3,8 +3,8 @@ def createBetterResult(result):
 
     Parameters
     ----------
-    result: dict
-        primer3 result
+    result : dict
+        primer3 result.
 
     Returns
     -------
