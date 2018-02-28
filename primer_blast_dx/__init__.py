@@ -303,7 +303,7 @@ def specCheck(task, taskResult):
     blastPath = os.path.dirname(__file__) + "/blastn"
     if "blastn_path" in config and config["blastn_path"] is not None:
         blastPath = config["blastn_path"]
-    
+
     print("using " + blastPath)
 
 
@@ -436,14 +436,13 @@ def specCheck(task, taskResult):
     return data
 
 
-
 def run(task):
     """ run findPrimers and specCheck
     Args:
         task (dic): task data
         saveTmp (bool): true if user wants to save temporary files
     Returns:
-        dic: result dictionary 
+        dic: result dictionary
     """
 
     taskResult = findPrimersFromTask(task)
@@ -451,7 +450,7 @@ def run(task):
      # save the primer result to a file
     with open(taskResultPath, 'w') as newTaskResultFile:
         json.dump(taskResult, newTaskResultFile, sort_keys = True, indent = 4, ensure_ascii = False)
-    
+
     specResult = specCheck(task, taskResult)
 
     return specResult
