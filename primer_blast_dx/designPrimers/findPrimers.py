@@ -8,7 +8,7 @@ def findPrimers(inputData, resultFormat="better"):
     Parameters
     ----------
     inputData: input data
-        asd
+        asd  
     resultFormat: result format (raw/better),optional
         sadsa
 
