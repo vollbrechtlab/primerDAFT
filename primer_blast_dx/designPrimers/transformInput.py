@@ -1,5 +1,6 @@
 def transformInput(data):
     """ separate input to seq_args and global_args
+    
     Args:
         data: input data
     Returns:

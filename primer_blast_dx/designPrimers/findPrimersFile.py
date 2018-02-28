@@ -1,5 +1,6 @@
 def findPrimersFile(taskPath, taskResultPath):
     """ find primers from the task file and store the result to a task result file
+    
     Args:
         taskPath: location of the task file
         taskResultPath: location of the task result file to store

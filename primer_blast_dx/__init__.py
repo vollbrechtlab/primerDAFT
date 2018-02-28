@@ -1,10 +1,8 @@
 #!/usr/bin/env
-
 # this file makes the package
-
-"""A pypi demonstration vehicle.
-
-.. moduleauthor:: Andrew Carter <andrew@invalid.com>
+"""
+Created on 29 July 2012
+@author: Lisa Simpson
 """
 
 import os
@@ -15,11 +13,15 @@ import pprint as pp
 
 def run(task,configFile):
     """ run findPrimers and specCheck
-    Args:
+
+    Parameters
+    ----------
         task (dic): task data
         saveTmp (bool): true if user wants to save temporary files
+
     Returns:
         dict: result dictionary
+
     """
 
     taskResult = findPrimersFromTask(task)
