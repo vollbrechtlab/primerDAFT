@@ -42,6 +42,5 @@ taskResult = primer_blast_dx.run(task)
 Take a look at test code for more detail
 
 # Authors
-Takao Shibamoto
-
+Takao Shibamoto  
 Kokulapalan (Gokul) Wimalanathan
