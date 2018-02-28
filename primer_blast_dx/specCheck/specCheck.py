@@ -1,34 +1,61 @@
-def specCheck(task, taskResult):
+#basepackage
+import primer_blast_dx
+from primer_blast_dx.specCheck.getTargetAttrs import getTargetAttrs
+from primer_blast_dx.specCheck.getOfftargetAttrs import getOfftargetAttrs
+
+#Base Python
+import json, os, re, sys, configparser
+
+#printing
+import pprint as pp
+
+#pysam
+import pysam
+
+#Pandas
+import pandas as pd
+from pandas.compat import StringIO
+
+#Bio Python
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
+from Bio.Alphabet import IUPAC
+from Bio import SeqIO
+from Bio.Blast.Applications import NcbiblastnCommandline
+
+def specCheck(task, taskResult, configFile):
     '''
     Dealing with input files both task and task results
     '''
 
-    with open('config.json') as config_file:
-        config = json.load(config_file)
+    config = configparser.ConfigParser()
+    config.read(configFile)
+
+    # with open(configFile) as config_file:
+    #     config = json.load(config_file)
 
     task_data = task
     data = taskResult
 
     tmp_id = task_data['task_id'] + "_taskResult.json"
 
-
     '''
     Defining the basic variables
     '''
 
     #blast parameters
-    blast_cols = ["qseqid","qseq","qlen","qstart","qend","sseqid","sseq","sstart","send","length","mismatch","evalue"]
+    blast_cols = config["BLAST"]["blast_cols"].split(",")
+    # ["qseqid","qseq","qlen","qstart","qend","sseqid","sseq","sstart","send","length","mismatch","evalue"]
     out_fmt="'6 "+" ".join(blast_cols)+"'"
     num_primer_pairs = len(data["result"]["pairs"])
-    genome_fasta = config[task_data["spec_check"]["GENOME"]]
+    genome_fasta = config["GENOMES"][task_data["spec_check"]["GENOME"]]
     pysam_fasta = pysam.FastaFile(genome_fasta)
+    blastPath = os.path.dirname(os.path.dirname(__file__))+"/bin/blastn"
 
-    blastPath = os.path.dirname(__file__) + "/blastn"
+
     if "blastn_path" in config and config["blastn_path"] is not None:
         blastPath = config["blastn_path"]
-
     print("using " + blastPath)
-
 
     '''
     input_seqs = []
@@ -70,9 +97,8 @@ def specCheck(task, taskResult):
     SeqIO.write(seqs,primer_fa,"fasta")
 
 
-
     #Run biopython BLASTN
-    blast_cline = NcbiblastnCommandline(cmd=blastPath,query=primer_fa,db=genome_fasta, task="blastn-short",outfmt=out_fmt,evalue=150,num_threads=4)
+    blast_cline = NcbiblastnCommandline(cmd=blastPath,query=primer_fa,db=genome_fasta, task="blastn-short",outfmt=out_fmt,evalue=config["BLAST"]["evalue"],num_threads=config["BLAST"]["num_threads"])
     stdout, stderr = blast_cline()
 
     pd_data = StringIO(stdout)
@@ -93,6 +119,7 @@ def specCheck(task, taskResult):
     df_filt = df[df.all_mismatch<task_data["spec_check"]["TOTAL_MISMATCH_IGNORE"]]
 
 
+
     sel_cols=["side","pair","qseqid","sseqid","qseq","qstart","qend","sstart","send","strand","qlen","length","all_mismatch"]
     idx_col = ["pair","sseqid"]
     a = df_filt[(df_filt.all_mismatch<2) & (df_filt.length == df_filt.qlen) & (df_filt.side=="left")][sel_cols]
@@ -111,8 +138,8 @@ def specCheck(task, taskResult):
 
         for target in curr_targets.itertuples():
             target_dict = {"left":{},"right":{},"target_seq":"","prod_size":0}
-            target_dict["left"] = get_target_attrs(target,"left",x,data,side_cols,target_cols,pysam_fasta)
-            target_dict["right"] = get_target_attrs(target,"right",x,data,side_cols,target_cols,pysam_fasta)
+            target_dict["left"] = getTargetAttrs(target,"left",x,data,side_cols,target_cols,pysam_fasta)
+            target_dict["right"] = getTargetAttrs(target,"right",x,data,side_cols,target_cols,pysam_fasta)
             if target_dict["left"]["strand"] == "+":
                 gen_start=target_dict["left"]["start"]
                 gen_end=target_dict["right"]["start"]
@@ -131,14 +158,15 @@ def specCheck(task, taskResult):
     off_targets = c[(abs(c.sstart_left-c.sstart_right)<task_data["spec_check"]["MAX_TARGET_SIZE"]) & (c.strand_left != c.strand_right)]
 
 
+
     for x in list(pd.unique(off_targets["pair"])):
         x = int(x)
         curr_targets = off_targets[off_targets.pair==str(x)].reset_index(None)
         all_off_targets=[]
         for off_target in curr_targets.itertuples():
             off_target_dict = {"left":{},"right":{},"target_seq":"","prod_size":0}
-            off_target_dict["left"] = get_offtarget_attrs(off_target,"left",x,data,side_cols,target_cols,pysam_fasta)
-            off_target_dict["right"] = get_offtarget_attrs(off_target,"right",x,data,side_cols,target_cols,pysam_fasta)
+            off_target_dict["left"] = getOfftargetAttrs(off_target,"left",x,data,side_cols,target_cols,pysam_fasta)
+            off_target_dict["right"] = getOfftargetAttrs(off_target,"right",x,data,side_cols,target_cols,pysam_fasta)
 
             if off_target_dict["left"]["strand"] is "+":
                 gen_start=off_target_dict["left"]["start"]

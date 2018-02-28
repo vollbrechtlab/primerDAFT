@@ -1,9 +1,16 @@
 #pysam
 import pysam
 
+#BioPython
+from Bio.Seq import Seq
+from Bio.Alphabet import IUPAC
+
 #Pandas
 import pandas as pd
 from pandas.compat import StringIO
+
+#primer_blast_dx
+from primer_blast_dx.specCheck.getMaskedSeq import getMaskedSeq
 
 def getOfftargetAttrs(off_target,side,idx,data,side_cols,target_cols,pysam_fasta):
     primer_seq = data["result"]["pairs"][idx]["PRIMER_"+side.upper()]["SEQUENCE"]
@@ -35,7 +42,7 @@ def getOfftargetAttrs(off_target,side,idx,data,side_cols,target_cols,pysam_fasta
         match_seq = pysam_fasta.fetch(region=out_dict["chr"]+":"+str(out_dict["end"])+"-"+str(out_dict["start"]))
         match_seq = Seq(match_seq,IUPAC.unambiguous_dna).reverse_complement()
 
-    masked_seq = get_masked_seq(primer_seq,match_seq)
+    masked_seq = getMaskedSeq(primer_seq,match_seq)
     out_dict["masked_seq"] = str(masked_seq)
     out_dict["match_seq"] = str(match_seq)
     return(out_dict)

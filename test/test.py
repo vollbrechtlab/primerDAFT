@@ -28,8 +28,8 @@ def test_run():
     taskFilePath = "0Y7Cnlt4E37SP2W9_task.json"
     with open(taskFilePath) as taskFile:
         taskData = json.load(taskFile)
-
-    result = primer_blast_dx.run(taskData)
+    configFile = "primer-dx.conf"
+    result = primer_blast_dx.run(taskData, configFile)
     print(result)
 
 test_run()
