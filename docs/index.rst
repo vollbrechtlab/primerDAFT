@@ -10,7 +10,7 @@ Welcome to primer-blast-dx's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+.. automodule:: primer_blast_dx
 
 Indices and tables
 ==================
