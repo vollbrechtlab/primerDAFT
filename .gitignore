@@ -104,3 +104,5 @@ test/fa
 
 .ipynb*
 *.ipynb
+
+sphinx-docs/_build/
