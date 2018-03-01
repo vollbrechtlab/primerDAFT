@@ -10,6 +10,7 @@ Welcome to Primer-BLAST-Dx's documentation!
    :maxdepth: 4
    :caption: Contents:
 
+   source/modules  
 
 
 Indices and tables
