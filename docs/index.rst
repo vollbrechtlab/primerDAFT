@@ -7,7 +7,7 @@ Welcome to Primer-BLAST-Dx's documentation!
 ===========================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
 
 
