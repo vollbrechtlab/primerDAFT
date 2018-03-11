@@ -8,6 +8,7 @@ setup(name='primer blast dx',
       author_email='takaos@iastate.edu',
       license='MIT',
       packages=['primer_blast_dx'],
+      scripts=['bin/asd.py'],
       install_requires=[
           'primer3-py',
           'biopython',
