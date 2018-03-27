@@ -1,4 +1,4 @@
-from primer_blast_dx.designPrimers.findPrimers import findPrimers
+from primerDAFT.designPrimers.findPrimers import findPrimers
 
 def findPrimersFromTask(task):
     """ return primer3 result from task. Checks exception

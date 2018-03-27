@@ -1,37 +1,37 @@
-primer_blast_dx.specCheck package
+primerDAFT.specCheck package
 =================================
 
 Submodules
 ----------
 
-primer_blast_dx.specCheck.getMaskedSeq module
+primerDAFT.specCheck.getMaskedSeq module
 ---------------------------------------------
 
-.. automodule:: primer_blast_dx.specCheck.getMaskedSeq
+.. automodule:: primerDAFT.specCheck.getMaskedSeq
     :members:
     :undoc-members:
     :show-inheritance:
 
-primer_blast_dx.specCheck.getOfftargetAttrs module
+primerDAFT.specCheck.getOfftargetAttrs module
 --------------------------------------------------
 
-.. automodule:: primer_blast_dx.specCheck.getOfftargetAttrs
+.. automodule:: primerDAFT.specCheck.getOfftargetAttrs
     :members:
     :undoc-members:
     :show-inheritance:
 
-primer_blast_dx.specCheck.getTargetAttrs module
+primerDAFT.specCheck.getTargetAttrs module
 -----------------------------------------------
 
-.. automodule:: primer_blast_dx.specCheck.getTargetAttrs
+.. automodule:: primerDAFT.specCheck.getTargetAttrs
     :members:
     :undoc-members:
     :show-inheritance:
 
-primer_blast_dx.specCheck.specCheck module
+primerDAFT.specCheck.specCheck module
 ------------------------------------------
 
-.. automodule:: primer_blast_dx.specCheck.specCheck
+.. automodule:: primerDAFT.specCheck.specCheck
     :members:
     :undoc-members:
     :show-inheritance:
@@ -40,7 +40,7 @@ primer_blast_dx.specCheck.specCheck module
 Module contents
 ---------------
 
-.. automodule:: primer_blast_dx.specCheck
+.. automodule:: primerDAFT.specCheck
     :members:
     :undoc-members:
     :show-inheritance:

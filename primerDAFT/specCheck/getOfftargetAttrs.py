@@ -9,8 +9,8 @@ from Bio.Alphabet import IUPAC
 import pandas as pd
 from pandas.compat import StringIO
 
-#primer_blast_dx
-from primer_blast_dx.specCheck.getMaskedSeq import getMaskedSeq
+#primerDAFT
+from primerDAFT.specCheck.getMaskedSeq import getMaskedSeq
 
 def getOfftargetAttrs(off_target,side,idx,data,side_cols,target_cols,pysam_fasta):
     primer_seq = data["result"]["pairs"][idx]["PRIMER_"+side.upper()]["SEQUENCE"]

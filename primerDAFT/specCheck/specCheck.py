@@ -1,7 +1,7 @@
 #basepackage
-import primer_blast_dx
-from primer_blast_dx.specCheck.getTargetAttrs import getTargetAttrs
-from primer_blast_dx.specCheck.getOfftargetAttrs import getOfftargetAttrs
+import primerDAFT
+from primerDAFT.specCheck.getTargetAttrs import getTargetAttrs
+from primerDAFT.specCheck.getOfftargetAttrs import getOfftargetAttrs
 
 #Base Python
 import json, os, re, sys, configparser

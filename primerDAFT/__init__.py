@@ -6,8 +6,8 @@ Created on 29 July 2012
 """
 
 import os
-from primer_blast_dx.designPrimers.findPrimersFromTask import findPrimersFromTask
-from primer_blast_dx.specCheck.specCheck import specCheck
+from primerDAFT.designPrimers.findPrimersFromTask import findPrimersFromTask
+from primerDAFT.specCheck.specCheck import specCheck
 import json,sys
 import pprint as pp
 

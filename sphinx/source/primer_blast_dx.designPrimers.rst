@@ -1,45 +1,45 @@
-primer_blast_dx.designPrimers package
+primerDAFT.designPrimers package
 =====================================
 
 Submodules
 ----------
 
-primer_blast_dx.designPrimers.createBetterResult module
+primerDAFT.designPrimers.createBetterResult module
 -------------------------------------------------------
 
-.. automodule:: primer_blast_dx.designPrimers.createBetterResult
+.. automodule:: primerDAFT.designPrimers.createBetterResult
     :members:
     :undoc-members:
     :show-inheritance:
 
-primer_blast_dx.designPrimers.findPrimers module
+primerDAFT.designPrimers.findPrimers module
 ------------------------------------------------
 
-.. automodule:: primer_blast_dx.designPrimers.findPrimers
+.. automodule:: primerDAFT.designPrimers.findPrimers
     :members:
     :undoc-members:
     :show-inheritance:
 
-primer_blast_dx.designPrimers.findPrimersFile module
+primerDAFT.designPrimers.findPrimersFile module
 ----------------------------------------------------
 
-.. automodule:: primer_blast_dx.designPrimers.findPrimersFile
+.. automodule:: primerDAFT.designPrimers.findPrimersFile
     :members:
     :undoc-members:
     :show-inheritance:
 
-primer_blast_dx.designPrimers.findPrimersFromTask module
+primerDAFT.designPrimers.findPrimersFromTask module
 --------------------------------------------------------
 
-.. automodule:: primer_blast_dx.designPrimers.findPrimersFromTask
+.. automodule:: primerDAFT.designPrimers.findPrimersFromTask
     :members:
     :undoc-members:
     :show-inheritance:
 
-primer_blast_dx.designPrimers.transformInput module
+primerDAFT.designPrimers.transformInput module
 ---------------------------------------------------
 
-.. automodule:: primer_blast_dx.designPrimers.transformInput
+.. automodule:: primerDAFT.designPrimers.transformInput
     :members:
     :undoc-members:
     :show-inheritance:
@@ -48,7 +48,7 @@ primer_blast_dx.designPrimers.transformInput module
 Module contents
 ---------------
 
-.. automodule:: primer_blast_dx.designPrimers
+.. automodule:: primerDAFT.designPrimers
     :members:
     :undoc-members:
     :show-inheritance:

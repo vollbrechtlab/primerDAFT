@@ -1,4 +1,4 @@
-primer_blast_dx package
+primerDAFT package
 =======================
 
 Subpackages
@@ -6,16 +6,16 @@ Subpackages
 
 .. toctree::
 
-    primer_blast_dx.designPrimers
-    primer_blast_dx.specCheck
+    primerDAFT.designPrimers
+    primerDAFT.specCheck
 
 Submodules
 ----------
 
-primer_blast_dx.version module
+primerDAFT.version module
 ------------------------------
 
-.. automodule:: primer_blast_dx.version
+.. automodule:: primerDAFT.version
     :members:
     :undoc-members:
     :show-inheritance:
@@ -24,7 +24,7 @@ primer_blast_dx.version module
 Module contents
 ---------------
 
-.. automodule:: primer_blast_dx
+.. automodule:: primerDAFT
     :members:
     :undoc-members:
     :show-inheritance:

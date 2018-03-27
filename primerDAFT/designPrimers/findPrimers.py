@@ -1,6 +1,6 @@
 from primer3.bindings import designPrimers
-from primer_blast_dx.designPrimers.transformInput import transformInput
-from primer_blast_dx.designPrimers.createBetterResult import createBetterResult
+from primerDAFT.designPrimers.transformInput import transformInput
+from primerDAFT.designPrimers.createBetterResult import createBetterResult
 
 def findPrimers(inputData, resultFormat="better"):
     """ return primer3 result with given format

@@ -1,13 +1,13 @@
 from setuptools import setup
 
-setup(name='primer_blast_dx',
+setup(name='primerDAFT',
       version='0.1',
-      description='simple primer blast',
-      url='https://github.com/takao42/primer-blast-dx',
-      author='Takao',
+      description='A Python based PCR Primer Design and Filtering Package',
+      url='https://github.com/vollbrechtlab/primerDAFT',
+      author='Takao Shibamoto',
       author_email='takaos@iastate.edu',
       license='MIT',
-      packages=['primer_blast_dx'],
+      packages=['primerDAFT'],
       scripts=['bin/asd.py'],
       install_requires=[
           'primer3-py',

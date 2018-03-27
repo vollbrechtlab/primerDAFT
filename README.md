@@ -35,8 +35,8 @@ python setup.py develop
 
 # How to Run
 ```
-import primer_blast_dx
-taskResult = primer_blast_dx.run(task)
+import primerDAFT
+taskResult = primerDAFT.run(task)
 ```
 
 Take a look at test code for more detail

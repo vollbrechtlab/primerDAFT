@@ -1,7 +1,7 @@
-primer_blast_dx
+primerDAFT
 ===============
 
 .. toctree::
    :maxdepth: 4
 
-   primer_blast_dx
+   primerDAFT
