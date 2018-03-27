@@ -1,17 +1,17 @@
 #!/usr/bin/env
 
-import primer_blast_dx
+import primerDAFT
 from pprint import pprint
 import json
 
-#primer_blast_dx.findPrimersFile("0Y7Cnlt4E37SP2W9_task.json", "someresult.json")
+#primerDAFT.findPrimersFile("0Y7Cnlt4E37SP2W9_task.json", "someresult.json")
 
 def test1_specCheck():
-    result = primer_blast_dx.specCheck("0Y7Cnlt4E37SP2W9_task.json", "someresult.json")
+    result = primerDAFT.specCheck("0Y7Cnlt4E37SP2W9_task.json", "someresult.json")
     print(result)
 
 def test2_specCheck():
-    result = primer_blast_dx.specCheck("0Y7Cnlt4E37SP2W9_task.json", "0Y7Cnlt4E37SP2W9_taskResult.json")
+    result = primerDAFT.specCheck("0Y7Cnlt4E37SP2W9_task.json", "0Y7Cnlt4E37SP2W9_taskResult.json")
     print(result)
 
 
@@ -21,7 +21,7 @@ def test_findPrimers():
     with open(taskFilePath) as taskFile:
         taskData = json.load(taskFile)
 
-    result = primer_blast_dx.findPrimers(taskData['input_data'])
+    result = primerDAFT.findPrimers(taskData['input_data'])
     print(result)
 
 def test_run():
@@ -29,8 +29,8 @@ def test_run():
     with open(taskFilePath) as taskFile:
         taskData = json.load(taskFile)
     configFile = "primer-dx.conf"
-    result = primer_blast_dx.run(taskData, configFile)
-    print(result)
+    result = primerDAFT.run(taskData, configFile)
+    pprint(result)
 
 test_run()
 
