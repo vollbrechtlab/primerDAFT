@@ -16,11 +16,15 @@ def test_findPrimers():
     pprint(result)
 
 def test_run():
-    taskFilePath = "test_task.json"
+    taskFilePath = "test_data/test_task.json"
     with open(taskFilePath) as taskFile:
         taskData = json.load(taskFile)
+    with open('cache/'+taskData['taskId']+'_task.json', 'w') as outfile:
+        json.dump(taskData, outfile)
     configFile = "primer-dx.conf"
     result = primerDAFT.run(taskData, configFile)
-    #pprint(result)
+    pprint(result)
+    #with open('cache/'+result['taskId']+'_result.json', 'w') as outfile:
+    #    json.dump(result, outfile)
 
 test_run()
