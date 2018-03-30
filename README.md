@@ -2,6 +2,10 @@
 
 PCR Primer package written in Python3
 
+## How the tool works
+
+![flow chart](https://raw.githubusercontent.com/vollbrechtlab/primerDAFT/dev/digram/flow%20chart.png)
+
 ## Setup
 Make a file called config.json which contains the locations of the blastn and fasta genome files.
 
