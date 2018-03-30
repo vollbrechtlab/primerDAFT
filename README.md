@@ -2,23 +2,13 @@
 
 PCR Primer package written in Python3
 
-## How the tool works
-
-![flow chart](https://raw.githubusercontent.com/vollbrechtlab/primerDAFT/dev/digram/flow%20chart.png)
-
 ## Setup
 Make a file called config.json which contains the locations of the blastn and fasta genome files.
 
 This packages uses ncbi-blast-2.7.1 downloaded from [here](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/).
-It is compiled for linux 64x. If your environment is different, specify the path to blastn in config.json.
+It is compiled for linux 64x. If your environment is different, specify the path to blastn in config.
 
-Example:
-```
-{
-    "blastn-path": null,
-    "maize_v3":"fa/Zea_mays.AGPv3.29.dna.genome.fa"
-}
-```
+Look at `test/primer-dx.conf` for example.
 
 ## Install
 (Optional: virtual environment)
@@ -29,15 +19,15 @@ source venv/bin/activate
 
 Install package
 ```
-python setup.py install
+python3 setup.py install
 ```
 
 Install package as development (This only creates symlinks)
 ```
-python setup.py develop
+python3 setup.py develop
 ```
 
-# How to Run
+## Useage
 ```
 import primerDAFT
 taskResult = primerDAFT.run(task)
@@ -45,6 +35,10 @@ taskResult = primerDAFT.run(task)
 
 Take a look at test code for more detail
 
-# Authors
+## How the tool works
+
+![flow chart](https://raw.githubusercontent.com/vollbrechtlab/primerDAFT/dev/digram/flow%20chart.png)
+
+## Authors
 Takao Shibamoto  
 Kokulapalan (Gokul) Wimalanathan
