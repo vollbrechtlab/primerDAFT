@@ -6,12 +6,12 @@ Created on 29 July 2012
 """
 
 import os
-from primerDAFT.designPrimers.findPrimersFromTask import findPrimersFromTask
+from primerDAFT.designPrimers.findPrimers import findPrimers
 from primerDAFT.specCheck.specCheck import specCheck
 import json,sys
-import pprint as pp
+from pprint import pprint
 
-def run(task,configFile):
+def run(task, configFile):
     """ run findPrimers and specCheck
 
     Parameters
@@ -24,13 +24,27 @@ def run(task,configFile):
 
     """
 
-    taskResult = findPrimersFromTask(task)
+    result = {}
 
-    taskResultPath = task['task_id'] + "_taskResult.json"
-     # save the primer result to a file
-    with open(taskResultPath, 'w') as newTaskResultFile:
-        json.dump(taskResult, newTaskResultFile, sort_keys = True, indent = 4, ensure_ascii = False)
+    try: # try to get result
+        if 'format' in task:
+            result['result'] = findPrimers(task['primer3_data'], task['format'])
+        else:
+            result['result'] = findPrimers(task['primer3_data'])
+    
+    except Exception as e:
+        result['status'] = 'error'
+        result['error_statement'] = 'primer3_data is broken'
+    
+    else: # no problem
+        result['status'] = 'ok'
 
-    specResult = specCheck(task, taskResult,configFile)
-    sys.exit()
-    return specResult
+    if result['status'] == 'ok':
+        try:
+            result['result'] = specCheck(task, result, configFile)
+        except Exception as e:
+            print(e)
+            result['status'] = 'error'
+            result['error_statement'] = 'spec_check is broken'
+
+    return result

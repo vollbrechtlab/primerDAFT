@@ -23,7 +23,7 @@ from Bio.Alphabet import IUPAC
 from Bio import SeqIO
 from Bio.Blast.Applications import NcbiblastnCommandline
 
-def specCheck(task, taskResult, configFile):
+def specCheck(task, result, configFile):
     '''
     Dealing with input files both task and task results
     '''
@@ -35,9 +35,9 @@ def specCheck(task, taskResult, configFile):
     #     config = json.load(config_file)
 
     task_data = task
-    data = taskResult
+    data = result
 
-    tmp_id = task_data['task_id'] + "_taskResult.json"
+    tmp_id = task_data['taskId'] + "_tmp"
 
     '''
     Defining the basic variables
@@ -82,7 +82,7 @@ def specCheck(task, taskResult, configFile):
     '''
 
     #Saving primers as fasta file
-    primer_fa=tmp_id+".primer.fa"
+    primer_fa=config["GENERAL"]["cache_directory"]+"/"+tmp_id+".primer.fa"
     seqs = []
     counter=0
     for pair in data["result"]["pairs"]:

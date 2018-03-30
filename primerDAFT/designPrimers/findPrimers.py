@@ -16,11 +16,11 @@ def findPrimers(inputData, resultFormat="better"):
     ----------
     result : sad
     """
-    p3pyInputData = transformInput(inputData)
+    inputData = transformInput(inputData)
 
     result = {}
     try:
-        result = designPrimers(p3pyInputData['seq_args'], p3pyInputData['global_args'])
+        result = designPrimers(inputData['seq_args'], inputData['global_args'])
     except: # input data is broken
         raise Exception('input data is broken')
 
