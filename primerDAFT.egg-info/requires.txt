@@ -1,4 +1,0 @@
-primer3-py
-biopython
-pandas
-pysam
