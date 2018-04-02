@@ -5,6 +5,8 @@ Created on 29 July 2012
 @author: Lisa Simpson
 """
 
+__all__ = ['designPrimers', 'specCheck']
+
 import os
 from primerDAFT.designPrimers.findPrimers import findPrimers
 from primerDAFT.specCheck.specCheck import specCheck
