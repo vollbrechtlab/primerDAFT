@@ -7,7 +7,7 @@ setup(name='primerDAFT',
       author='Takao Shibamoto',
       author_email='takaos@iastate.edu',
       license='MIT',
-      packages=find_packages(exclude=['venv','test','sphinx','docs','diagram']),
+      packages=['primerDAFT', 'primerDAFT.designPrimers', 'primerDAFT.specCheck','primerDAFT.bin'],
       scripts=['bin/asd.py'],
       install_requires=[
           'primer3-py',
