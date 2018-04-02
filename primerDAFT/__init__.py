@@ -8,8 +8,8 @@ Created on 29 July 2012
 __all__ = ['designPrimers', 'specCheck']
 
 import os
-from primerDAFT.designPrimers import findPrimers
-from primerDAFT.specCheck import specCheck
+from primerDAFT.designPrimers.findPrimers import findPrimers
+from primerDAFT.specCheck.specCheck import specCheck
 import json,sys
 import pprint as pp
 
