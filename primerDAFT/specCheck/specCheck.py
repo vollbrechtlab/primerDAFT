@@ -23,6 +23,12 @@ from Bio.Alphabet import IUPAC
 from Bio import SeqIO
 from Bio.Blast.Applications import NcbiblastnCommandline
 
+class SpecError(Exception):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
 def specCheck(task, result, configFile):
     '''
     Dealing with input files both task and task results
@@ -49,7 +55,12 @@ def specCheck(task, result, configFile):
     out_fmt="'6 "+" ".join(blast_cols)+"'"
     num_primer_pairs = len(data["result"]["pairs"])
     genome_fasta = config["GENOMES"][task_data["spec_check"]["GENOME"]]
-    pysam_fasta = pysam.FastaFile(genome_fasta)
+    if os.path.isfile(genome_fasta):
+        pysam_fasta = pysam.FastaFile(genome_fasta)
+    elif os.path.isfile(genome_fasta+".gz"):
+        pysam_fasta = pysam.FastaFile(genome_fasta+".gz")
+    else:
+        raise SpecError("Genome not Found")
     blastPath = os.path.dirname(os.path.dirname(__file__))+"/bin/blastn"
 
 
@@ -193,7 +204,12 @@ def rank_primers(data):
         "off_targets":off_targets
     })
     df_sort = df.sort_values(by=['targets'])
-    sort_pairs = [data["result"]["pairs"][x] for x in df_sort["idx"]]
-    sort_pairs
+    sort_pairs = []
+    sort_pairs = []
+    for x in df_sort["idx"]:
+        tmp_data = data["result"]["pairs"][x]
+        tmp_data["off_targets"] = int(df_sort[df_sort.idx == x].off_targets)
+        tmp_data["targets"] = int(df_sort[df_sort.idx == x].targets)
+        sort_pairs.append(tmp_data)
     data["result"]["pairs"] = sort_pairs
     return(data)

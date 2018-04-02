@@ -1,1 +1,1 @@
-recursive-include primerDAFT.bin *
+include primerDAFT/bin/*
