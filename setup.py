@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='primerDAFT',
-      version='0.2',
+      version='0.3',
       description='A Python based PCR Primer Design and Filtering Package',
       url='https://github.com/vollbrechtlab/primerDAFT',
       author='Takao Shibamoto',
