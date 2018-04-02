@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: primerDAFT
+Version: 0.2
+Summary: A Python based PCR Primer Design and Filtering Package
+Home-page: https://github.com/vollbrechtlab/primerDAFT
+Author: Takao Shibamoto
+Author-email: takaos@iastate.edu
+License: MIT
+Description: UNKNOWN
+Platform: UNKNOWN

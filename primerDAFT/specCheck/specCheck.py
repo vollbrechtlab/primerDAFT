@@ -23,7 +23,7 @@ from Bio.Alphabet import IUPAC
 from Bio import SeqIO
 from Bio.Blast.Applications import NcbiblastnCommandline
 
-def specCheck(task, taskResult, configFile):
+def specCheck(task, result, configFile):
     '''
     Dealing with input files both task and task results
     '''
@@ -35,9 +35,9 @@ def specCheck(task, taskResult, configFile):
     #     config = json.load(config_file)
 
     task_data = task
-    data = taskResult
+    data = result
 
-    tmp_id = task_data['task_id'] + "_taskResult.json"
+    tmp_id = task_data['taskId'] + "_tmp"
 
     '''
     Defining the basic variables
@@ -58,31 +58,11 @@ def specCheck(task, taskResult, configFile):
     print("using " + blastPath)
 
     '''
-    input_seqs = []
-    input_seq = Seq(task_data['input_data']["SEQUENCE_TEMPLATE"],IUPAC.unambiguous_dna)
-    input_sr = SeqRecord(input_seq,id="input",description="")
-    input_seqs.append(input_sr)
-    SeqIO.write(input_seqs,"input_seq.fa","fasta")
-    blast_cline = NcbiblastnCommandline(query="input_seq.fa",db=genome_fasta, task="megablast",outfmt=out_fmt,evalue=1)
-    stdout, stderr = blast_cline()
-
-
-    # In[427]:
-
-
-    pd_data = StringIO(stdout)
-    df_input = pd.read_csv(pd_data,sep="\t",header=None,names=blast_cols)
-    df_input.to_csv("input_blast.out",index=None)
-    '''
-
-    # In[430]:
-
-    '''
     Runnnig the steps
     '''
 
     #Saving primers as fasta file
-    primer_fa=tmp_id+".primer.fa"
+    primer_fa=config["GENERAL"]["cache_directory"]+"/"+tmp_id+".primer.fa"
     seqs = []
     counter=0
     for pair in data["result"]["pairs"]:
@@ -119,45 +99,23 @@ def specCheck(task, taskResult, configFile):
     df_filt = df[df.all_mismatch<task_data["spec_check"]["TOTAL_MISMATCH_IGNORE"]]
 
 
-
     sel_cols=["side","pair","qseqid","sseqid","qseq","qstart","qend","sstart","send","strand","qlen","length","all_mismatch"]
     idx_col = ["pair","sseqid"]
-    a = df_filt[(df_filt.all_mismatch<2) & (df_filt.length == df_filt.qlen) & (df_filt.side=="left")][sel_cols]
-    b = df_filt[(df_filt.all_mismatch<2) & (df_filt.length == df_filt.qlen) & (df_filt.side=="right")][sel_cols]
-    c = pd.merge(a,b,on=idx_col,how="outer",suffixes=["_left","_right"])
-    pot_targets = c[(abs(c["sstart_left"]-c["sstart_right"])<task_data["spec_check"]["MAX_TARGET_SIZE"]) & (c.strand_left != c.strand_right)]
-
-
-
-    target_cols = ["sseqid"]
-    side_cols = ["sstart","send","strand","qstart","qend","length","qlen"]
-    for x in list(pd.unique(pot_targets["pair"])):
-        x = int(x)
-        curr_targets = pot_targets[pot_targets.pair==str(x)].reset_index(None)
-        all_pot_targets=[]
-
-        for target in curr_targets.itertuples():
-            target_dict = {"left":{},"right":{},"target_seq":"","prod_size":0}
-            target_dict["left"] = getTargetAttrs(target,"left",x,data,side_cols,target_cols,pysam_fasta)
-            target_dict["right"] = getTargetAttrs(target,"right",x,data,side_cols,target_cols,pysam_fasta)
-            if target_dict["left"]["strand"] == "+":
-                gen_start=target_dict["left"]["start"]
-                gen_end=target_dict["right"]["start"]
-            else:
-                gen_start=target_dict["right"]["start"]
-                gen_end=target_dict["left"]["start"]
-            target_dict["prod_size"] = gen_end - gen_start + 1
-            target_dict["target_seq"] = pysam_fasta.fetch(region=target_dict["left"]["chr"]+":"+str(gen_start)+"-"+str(gen_end))
-            all_pot_targets.append(target_dict)
-        data["result"]["pairs"][x]["all_targets"] = {"pot_targets":all_pot_targets}
-
+    '''
+        Get potential targets
+    '''
+    try:
+        pot_target_data = get_pot_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta)
+    except Exception as e:
+        print(e)
+        raise ValueError
+    else:
+        data = pot_target_data
 
     a = df_filt[((df_filt.mismatch > 0) | (df_filt.qlen > df_filt.length)) & (df_filt.side=="left")][sel_cols]
     b = df_filt[((df_filt.mismatch > 0) | (df_filt.qlen > df_filt.length)) & (df_filt.side=="right")][sel_cols]
     c = pd.merge(a,b,on=idx_col,how="outer",suffixes=["_left","_right"])
     off_targets = c[(abs(c.sstart_left-c.sstart_right)<task_data["spec_check"]["MAX_TARGET_SIZE"]) & (c.strand_left != c.strand_right)]
-
-
 
     for x in list(pd.unique(off_targets["pair"])):
         x = int(x)
@@ -185,3 +143,57 @@ def specCheck(task, taskResult, configFile):
         data["result"]["pairs"][x]["all_targets"]["off_targets"] = all_off_targets
 
     return data
+
+
+def get_pot_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta):
+
+    a = df_filt[(df_filt.all_mismatch==0) & (df_filt.length == df_filt.qlen) & (df_filt.side=="left")][sel_cols]
+    b = df_filt[(df_filt.all_mismatch==0) & (df_filt.length == df_filt.qlen) & (df_filt.side=="right")][sel_cols]
+    c = pd.merge(a,b,on=idx_col,how="outer",suffixes=["_left","_right"])
+    pot_targets = c[(abs(c["sstart_left"]-c["sstart_right"])<task_data["spec_check"]["MAX_TARGET_SIZE"]) & (c.strand_left != c.strand_right)]
+
+    if len(pot_targets) == 0:
+        print("No potential targets in the genome")
+        raise ValueError
+
+    target_cols = ["sseqid"]
+    side_cols = ["sstart","send","strand","qstart","qend","length","qlen"]
+    for x in list(pd.unique(pot_targets["pair"])):
+        x = int(x)
+        curr_targets = pot_targets[pot_targets.pair==str(x)].reset_index(None)
+        all_pot_targets=[]
+
+        for target in curr_targets.itertuples():
+            target_dict = {"left":{},"right":{},"target_seq":"","prod_size":0}
+            target_dict["left"] = getTargetAttrs(target,"left",x,data,side_cols,target_cols,pysam_fasta)
+            target_dict["right"] = getTargetAttrs(target,"right",x,data,side_cols,target_cols,pysam_fasta)
+            if target_dict["left"]["strand"] == "+":
+                gen_start=target_dict["left"]["start"]
+                gen_end=target_dict["right"]["start"]
+            else:
+                gen_start=target_dict["right"]["start"]
+                gen_end=target_dict["left"]["start"]
+            target_dict["prod_size"] = gen_end - gen_start + 1
+            target_dict["target_seq"] = pysam_fasta.fetch(region=target_dict["left"]["chr"]+":"+str(gen_start)+"-"+str(gen_end))
+            all_pot_targets.append(target_dict)
+        data["result"]["pairs"][x]["all_targets"] = {"pot_targets":all_pot_targets}
+
+    data = rank_primers(data)
+    return data
+
+def rank_primers(data):
+    idx = pd.Series(range(len(data["result"]["pairs"])))
+    targets = pd.Series([len(primer["all_targets"]["pot_targets"]) for primer in data["result"]["pairs"]])
+    # targets = pd.Series(np.random.permutation([1,2,4,3,5]))
+    off_targets = pd.Series([ len(primer["all_targets"]["off_targets"]) if "off_targets" in primer["all_targets"] else 0 for primer in data["result"]["pairs"]])
+    # off_targets = pd.Series([4,3,2,1,1])
+    df = pd.DataFrame({
+        "idx":idx,
+        "targets":targets,
+        "off_targets":off_targets
+    })
+    df_sort = df.sort_values(by=['targets'])
+    sort_pairs = [data["result"]["pairs"][x] for x in df_sort["idx"]]
+    sort_pairs
+    data["result"]["pairs"] = sort_pairs
+    return(data)

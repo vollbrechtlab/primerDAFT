@@ -1,0 +1,12 @@
+README.md
+setup.py
+bin/asd.py
+primerDAFT/__init__.py
+primerDAFT/version.py
+primerDAFT.egg-info/PKG-INFO
+primerDAFT.egg-info/SOURCES.txt
+primerDAFT.egg-info/dependency_links.txt
+primerDAFT.egg-info/not-zip-safe
+primerDAFT.egg-info/requires.txt
+primerDAFT.egg-info/top_level.txt
+test/test.py
