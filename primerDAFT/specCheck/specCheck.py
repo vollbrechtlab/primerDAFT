@@ -2,6 +2,7 @@
 import primerDAFT
 from primerDAFT.specCheck.getTargetAttrs import getTargetAttrs
 from primerDAFT.specCheck.getOfftargetAttrs import getOfftargetAttrs
+import traceback
 
 #Base Python
 import json, os, re, sys, configparser
@@ -44,6 +45,7 @@ def specCheck(task, result, configFile):
     data = result
 
     tmp_id = task_data['taskId'] + "_tmp"
+
 
     '''
     Defining the basic variables
@@ -98,7 +100,6 @@ def specCheck(task, result, configFile):
     df.to_csv(primer_bl_out,index=None)
     df['strand'] = df.apply(lambda x: "+" if x['send'] > x['sstart'] else "-",axis=1)
 
-
     #get_gen_start = lambda row: row['send'] if row['sstart'] < row['send'] else row['sstart']
     #df['pstart'] = df.apply(get_gen_start,axis=1)
 
@@ -110,6 +111,7 @@ def specCheck(task, result, configFile):
     df_filt = df[df.all_mismatch<task_data["spec_check"]["TOTAL_MISMATCH_IGNORE"]]
 
 
+
     sel_cols=["side","pair","qseqid","sseqid","qseq","qstart","qend","sstart","send","strand","qlen","length","all_mismatch"]
     idx_col = ["pair","sseqid"]
     '''
@@ -119,21 +121,33 @@ def specCheck(task, result, configFile):
         pot_target_data = get_pot_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta)
     except Exception as e:
         print(e)
+        traceback.print_exc()
         raise ValueError
     else:
         data = pot_target_data
 
-    # a = df_filt[((df_filt.mismatch > 0) | (df_filt.qlen > df_filt.length)) & (df_filt.side=="left")][sel_cols]
-    # b = df_filt[((df_filt.mismatch > 0) | (df_filt.qlen > df_filt.length)) & (df_filt.side=="right")][sel_cols]
+    try:
+        off_target_data = get_off_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta)
+    except Exception as e:
+        print(e)
+        traceback.print_exc()
+        raise ValueError
+    else:
+        data = off_target_data
+
+    data = rank_primers(data)
+
+    return data
+
+
+def get_off_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta):
+    max_target_size = int(task_data["spec_check"]["MAX_TARGET_SIZE"])
     a = df_filt[((df_filt.all_mismatch > 0) & (df_filt.all_mismatch <= task_data["spec_check"]["TOTAL_SPECIFICITY_MISMATCH"])) & (df_filt.side=="left")][sel_cols]
     b = df_filt[((df_filt.all_mismatch > 0) & (df_filt.all_mismatch <= task_data["spec_check"]["TOTAL_SPECIFICITY_MISMATCH"])) & (df_filt.side=="right")][sel_cols]
     c = pd.merge(a,b,on=idx_col,how="inner",suffixes=["_left","_right"])
-    off_targets = c[(abs(c.sstart_left-c.sstart_right)<task_data["spec_check"]["MAX_TARGET_SIZE"]) & (c.strand_left != c.strand_right)]
-
-    # a.to_csv("cache/a.csv",index=None)
-    # b.to_csv("cache/b.csv",index=None)
-    # c.to_csv("cache/c.csv",index=None)
-    # off_targets.to_csv("cache/off_targets.csv",index=None)
+    c["size"] = c["sstart_left"]-c["sstart_right"]
+    # off_targets = c[(abs(c.sstart_left-c.sstart_right)<task_data["spec_check"]["MAX_TARGET_SIZE"]) & (c.strand_left != c.strand_right)]
+    off_targets = c[((c["size"]<=max_target_size) & (c["size"] > 0) & (c["strand_left"] == "-")) | ((c["size"]>=-1*max_target_size) & (c["size"] < 0) & (c["strand_left"] == "+")) & (c["strand_left"] != c["strand_right"])]
 
     for x in list(pd.unique(off_targets["pair"])):
         x = int(x)
@@ -152,23 +166,23 @@ def specCheck(task, result, configFile):
                 gen_end=off_target_dict["left"]["start"]
 
             off_target_dict["prod_size"] = gen_end - gen_start + 1
-            region=off_target_dict["left"]["chr"]+":"+str(gen_start)+"-"+str(gen_end)
+            region_str=str(off_target_dict["left"]["chr"])+":"+str(gen_start)+"-"+str(gen_end)
 
             if gen_start < gen_end:
-                off_target_dict["target_seq"] = pysam_fasta.fetch(region=region)
+                off_target_dict["target_seq"] = pysam_fasta.fetch(region=region_str)
                 all_off_targets.append(off_target_dict)
 
         data["result"]["pairs"][x]["all_targets"]["off_targets"] = all_off_targets
-
     return data
 
-
 def get_pot_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta):
-
+    max_target_size = int(task_data["spec_check"]["MAX_TARGET_SIZE"])
     a = df_filt[(df_filt.all_mismatch==0) & (df_filt.length == df_filt.qlen) & (df_filt.side=="left")][sel_cols]
     b = df_filt[(df_filt.all_mismatch==0) & (df_filt.length == df_filt.qlen) & (df_filt.side=="right")][sel_cols]
-    c = pd.merge(a,b,on=idx_col,how="outer",suffixes=["_left","_right"])
-    pot_targets = c[(abs(c["sstart_left"]-c["sstart_right"])<task_data["spec_check"]["MAX_TARGET_SIZE"]) & (c.strand_left != c.strand_right)]
+    c = pd.merge(a,b,on=idx_col,how="inner",suffixes=["_left","_right"])
+    c["size"] = c["sstart_left"]-c["sstart_right"]
+    pot_targets = c[((c["size"]<=max_target_size) & (c["size"] > 0) & (c["strand_left"] == "-")) | ((c["size"]>=-1*max_target_size) & (c["size"] < 0) & (c["strand_left"] == "+")) & (c["strand_left"] != c["strand_right"])]
+
 
     if len(pot_targets) == 0:
         print("No potential targets in the genome")
@@ -176,15 +190,19 @@ def get_pot_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta):
 
     target_cols = ["sseqid"]
     side_cols = ["sstart","send","strand","qstart","qend","length","qlen"]
+
     for x in list(pd.unique(pot_targets["pair"])):
         x = int(x)
         curr_targets = pot_targets[pot_targets.pair==str(x)].reset_index(None)
         all_pot_targets=[]
 
         for target in curr_targets.itertuples():
+
             target_dict = {"left":{},"right":{},"target_seq":"","prod_size":0}
+
             target_dict["left"] = getTargetAttrs(target,"left",x,data,side_cols,target_cols,pysam_fasta)
             target_dict["right"] = getTargetAttrs(target,"right",x,data,side_cols,target_cols,pysam_fasta)
+
             if target_dict["left"]["strand"] == "+":
                 gen_start=target_dict["left"]["start"]
                 gen_end=target_dict["right"]["start"]
@@ -192,11 +210,11 @@ def get_pot_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta):
                 gen_start=target_dict["right"]["start"]
                 gen_end=target_dict["left"]["start"]
             target_dict["prod_size"] = gen_end - gen_start + 1
-            target_dict["target_seq"] = pysam_fasta.fetch(region=target_dict["left"]["chr"]+":"+str(gen_start)+"-"+str(gen_end))
+
+            target_dict["target_seq"] = pysam_fasta.fetch(region=str(target_dict["left"]["chr"])+":"+str(gen_start)+"-"+str(gen_end))
             all_pot_targets.append(target_dict)
         data["result"]["pairs"][x]["all_targets"] = {"pot_targets":all_pot_targets}
 
-    data = rank_primers(data)
     return data
 
 def rank_primers(data):

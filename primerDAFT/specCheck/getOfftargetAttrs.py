@@ -36,10 +36,12 @@ def getOfftargetAttrs(off_target,side,idx,data,side_cols,target_cols,pysam_fasta
     out_dict["end"] = int(out_dict["end"])
 
     if attr_dict["strand"] is "+":
-        match_seq = pysam_fasta.fetch(region=out_dict["chr"]+":"+str(out_dict["start"])+"-"+str(out_dict["end"]))
+        region_str=str(out_dict["chr"])+":"+str(out_dict["start"])+"-"+str(out_dict["end"])
+        match_seq = pysam_fasta.fetch(region=region_str)
         match_seq = Seq(match_seq,IUPAC.unambiguous_dna)
     else:
-        match_seq = pysam_fasta.fetch(region=out_dict["chr"]+":"+str(out_dict["end"])+"-"+str(out_dict["start"]))
+        region_str=str(out_dict["chr"])+":"+str(out_dict["end"])+"-"+str(out_dict["start"])
+        match_seq = pysam_fasta.fetch(region=region_str)
         match_seq = Seq(match_seq,IUPAC.unambiguous_dna).reverse_complement()
 
     masked_seq = getMaskedSeq(primer_seq,match_seq)
