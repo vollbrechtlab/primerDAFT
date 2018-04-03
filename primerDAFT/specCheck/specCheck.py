@@ -123,10 +123,17 @@ def specCheck(task, result, configFile):
     else:
         data = pot_target_data
 
-    a = df_filt[((df_filt.mismatch > 0) | (df_filt.qlen > df_filt.length)) & (df_filt.side=="left")][sel_cols]
-    b = df_filt[((df_filt.mismatch > 0) | (df_filt.qlen > df_filt.length)) & (df_filt.side=="right")][sel_cols]
-    c = pd.merge(a,b,on=idx_col,how="outer",suffixes=["_left","_right"])
+    # a = df_filt[((df_filt.mismatch > 0) | (df_filt.qlen > df_filt.length)) & (df_filt.side=="left")][sel_cols]
+    # b = df_filt[((df_filt.mismatch > 0) | (df_filt.qlen > df_filt.length)) & (df_filt.side=="right")][sel_cols]
+    a = df_filt[((df_filt.all_mismatch > 0) & (df_filt.all_mismatch <= task_data["spec_check"]["TOTAL_SPECIFICITY_MISMATCH"])) & (df_filt.side=="left")][sel_cols]
+    b = df_filt[((df_filt.all_mismatch > 0) & (df_filt.all_mismatch <= task_data["spec_check"]["TOTAL_SPECIFICITY_MISMATCH"])) & (df_filt.side=="right")][sel_cols]
+    c = pd.merge(a,b,on=idx_col,how="inner",suffixes=["_left","_right"])
     off_targets = c[(abs(c.sstart_left-c.sstart_right)<task_data["spec_check"]["MAX_TARGET_SIZE"]) & (c.strand_left != c.strand_right)]
+
+    # a.to_csv("cache/a.csv",index=None)
+    # b.to_csv("cache/b.csv",index=None)
+    # c.to_csv("cache/c.csv",index=None)
+    # off_targets.to_csv("cache/off_targets.csv",index=None)
 
     for x in list(pd.unique(off_targets["pair"])):
         x = int(x)
