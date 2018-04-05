@@ -120,8 +120,8 @@ def specCheck(task, result, configFile):
     try:
         pot_target_data = get_pot_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta)
     except Exception as e:
-        print(e)
-        traceback.print_exc()
+        #print(e)
+        #traceback.print_exc()
         raise ValueError
     else:
         data = pot_target_data
@@ -129,8 +129,8 @@ def specCheck(task, result, configFile):
     try:
         off_target_data = get_off_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta)
     except Exception as e:
-        print(e)
-        traceback.print_exc()
+        #print(e)
+        #traceback.print_exc()
         raise ValueError
     else:
         data = off_target_data

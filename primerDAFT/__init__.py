@@ -1,9 +1,4 @@
 #!/usr/bin/env
-# this file makes the package
-"""
-Created on 29 July 2012
-@author: Lisa Simpson
-"""
 
 __all__ = ['designPrimers', 'specCheck']
 
@@ -18,7 +13,7 @@ def run(task, configFile):
     Parameters
     ----------
         task (dic): task data
-        saveTmp (bool): true if user wants to save temporary files
+        configFile (string): config file path
 
     Returns:
         dict: result dictionary
@@ -44,7 +39,7 @@ def run(task, configFile):
             try:
                 specCheck_result = specCheck(task, result, configFile)
             except Exception as e:
-                print(e)
+                #print(e)
                 result['status'] += ' speck check error'
                 result['error_statement'] = 'no match for this genome'
             else:
