@@ -106,3 +106,5 @@ test/fa
 *.ipynb
 
 sphinx-docs/_build/
+
+test/cache/

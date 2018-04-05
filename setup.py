@@ -1,13 +1,13 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='primerDAFT',
-      version='0.2',
+      version='0.3.1',
       description='A Python based PCR Primer Design and Filtering Package',
       url='https://github.com/vollbrechtlab/primerDAFT',
       author='Takao Shibamoto',
       author_email='takaos@iastate.edu',
       license='MIT',
-      packages=['primerDAFT'],
+      packages=['primerDAFT', 'primerDAFT.designPrimers', 'primerDAFT.specCheck','primerDAFT.bin'],
       scripts=['bin/asd.py'],
       install_requires=[
           'primer3-py',
@@ -15,4 +15,5 @@ setup(name='primerDAFT',
           'pandas',
           'pysam'
       ],
-      zip_safe=False)
+      zip_safe=False,
+      include_package_data=True)
