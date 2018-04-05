@@ -107,4 +107,4 @@ test/fa
 
 sphinx-docs/_build/
 
-cache/
+test/cache/

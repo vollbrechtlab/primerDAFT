@@ -35,10 +35,6 @@ taskResult = primerDAFT.run(task)
 
 Take a look at test code for more detail
 
-## How the tool works
-
-![flow chart](https://raw.githubusercontent.com/vollbrechtlab/primerDAFT/dev/digram/flow%20chart.png)
-
 ## Authors
 Takao Shibamoto  
 Kokulapalan (Gokul) Wimalanathan
