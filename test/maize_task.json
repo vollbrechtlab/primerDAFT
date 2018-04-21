@@ -1,5 +1,5 @@
 {
-    "spec_check": {
+    "spec_check_data": {
         "RUN_SPEC_CHECK":1,
         "TOTAL_SPECIFICITY_MISMATCH": 2,
         "SEND_SPECIFICITY_MISMATCH": 2,

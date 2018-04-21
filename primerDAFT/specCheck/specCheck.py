@@ -56,7 +56,7 @@ def specCheck(task, result, configFile):
     # ["qseqid","qseq","qlen","qstart","qend","sseqid","sseq","sstart","send","length","mismatch","evalue"]
     out_fmt="'6 "+" ".join(blast_cols)+"'"
     num_primer_pairs = len(data["result"]["pairs"])
-    genome_fasta = config["GENOMES"][task_data["spec_check"]["GENOME"]]
+    genome_fasta = config["GENOMES"][task_data["spec_check_data"]["GENOME"]]
     if os.path.isfile(genome_fasta):
         pysam_fasta = pysam.FastaFile(genome_fasta)
     elif os.path.isfile(genome_fasta+".gz"):
@@ -75,7 +75,7 @@ def specCheck(task, result, configFile):
     '''
 
     #Saving primers as fasta file
-    primer_fa=config["GENERAL"]["cache_directory"]+"/"+tmp_id+".primer.fa"
+    primer_fa=config["GENERAL"]["cache_directory"]+tmp_id+".primer.fa"
     seqs = []
     counter=0
     for pair in data["result"]["pairs"]:
@@ -108,7 +108,7 @@ def specCheck(task, result, configFile):
 
     df["side"],df["pair"] = zip(*df["qseqid"].map(lambda x:x.split("_")))
     df["all_mismatch"] = df.mismatch+(df.qlen-df.length)
-    df_filt = df[df.all_mismatch<task_data["spec_check"]["TOTAL_MISMATCH_IGNORE"]]
+    df_filt = df[df.all_mismatch<task_data["spec_check_data"]["TOTAL_MISMATCH_IGNORE"]]
 
 
 
@@ -141,12 +141,12 @@ def specCheck(task, result, configFile):
 
 
 def get_off_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta):
-    max_target_size = int(task_data["spec_check"]["MAX_TARGET_SIZE"])
-    a = df_filt[((df_filt.all_mismatch > 0) & (df_filt.all_mismatch <= task_data["spec_check"]["TOTAL_SPECIFICITY_MISMATCH"])) & (df_filt.side=="left")][sel_cols]
-    b = df_filt[((df_filt.all_mismatch > 0) & (df_filt.all_mismatch <= task_data["spec_check"]["TOTAL_SPECIFICITY_MISMATCH"])) & (df_filt.side=="right")][sel_cols]
+    max_target_size = int(task_data["spec_check_data"]["MAX_TARGET_SIZE"])
+    a = df_filt[((df_filt.all_mismatch > 0) & (df_filt.all_mismatch <= task_data["spec_check_data"]["TOTAL_SPECIFICITY_MISMATCH"])) & (df_filt.side=="left")][sel_cols]
+    b = df_filt[((df_filt.all_mismatch > 0) & (df_filt.all_mismatch <= task_data["spec_check_data"]["TOTAL_SPECIFICITY_MISMATCH"])) & (df_filt.side=="right")][sel_cols]
     c = pd.merge(a,b,on=idx_col,how="inner",suffixes=["_left","_right"])
     c["size"] = c["sstart_left"]-c["sstart_right"]
-    # off_targets = c[(abs(c.sstart_left-c.sstart_right)<task_data["spec_check"]["MAX_TARGET_SIZE"]) & (c.strand_left != c.strand_right)]
+    # off_targets = c[(abs(c.sstart_left-c.sstart_right)<task_data["spec_check_data"]["MAX_TARGET_SIZE"]) & (c.strand_left != c.strand_right)]
     off_targets = c[((c["size"]<=max_target_size) & (c["size"] > 0) & (c["strand_left"] == "-")) | ((c["size"]>=-1*max_target_size) & (c["size"] < 0) & (c["strand_left"] == "+")) & (c["strand_left"] != c["strand_right"])]
 
     for x in list(pd.unique(off_targets["pair"])):
@@ -176,7 +176,7 @@ def get_off_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta):
     return data
 
 def get_pot_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta):
-    max_target_size = int(task_data["spec_check"]["MAX_TARGET_SIZE"])
+    max_target_size = int(task_data["spec_check_data"]["MAX_TARGET_SIZE"])
     a = df_filt[(df_filt.all_mismatch==0) & (df_filt.length == df_filt.qlen) & (df_filt.side=="left")][sel_cols]
     b = df_filt[(df_filt.all_mismatch==0) & (df_filt.length == df_filt.qlen) & (df_filt.side=="right")][sel_cols]
     c = pd.merge(a,b,on=idx_col,how="inner",suffixes=["_left","_right"])

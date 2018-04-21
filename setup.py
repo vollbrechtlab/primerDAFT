@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='primerDAFT',
-      version='0.3.1',
+      version='0.3.2',
       description='A Python based PCR Primer Design and Filtering Package',
       url='https://github.com/vollbrechtlab/primerDAFT',
       author='Takao Shibamoto',

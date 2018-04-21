@@ -30,6 +30,7 @@ python3 setup.py develop
 ## Useage
 ```
 import primerDAFT
+task = json.load(open("some_task.json"))
 taskResult = primerDAFT.run(task, configFile)
 ```
 
