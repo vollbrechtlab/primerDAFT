@@ -16,9 +16,9 @@ def test_run():
 def test_createCSV():
     with open("good_result.json", 'r') as f:
         result = json.load(f)
-    resultCSV = primerDAFT.createCSVArray(result)
+    resultCSV = primerDAFT.createCSV(result)
     with open(result['taskId']+'_result.csv', 'w') as f:
-        csv.writer(f).writerows(resultCSV)
+        f.write(resultCSV)
 
 #test_run()
 test_createCSV()

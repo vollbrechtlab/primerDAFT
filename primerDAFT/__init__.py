@@ -20,7 +20,7 @@ def run(task, configFile):
 
     """
 
-    result = {}
+    result = {},
     result['taskId'] = task['taskId']
 
     try: # try to get primer3 result
@@ -48,77 +48,46 @@ def run(task, configFile):
     return result
 
 
-def createCSVArray(result):
-    if 'primer3 ok' in result['status']:
-        resultCSV = [['primer pair', 'product size', 'penalty', 'any th', 'end th']]
+def createCSV(result):
+    if 'ok' in result['status']:
+        resultCSV = 'primer pair,product size,penalty,any th,end th'
 
         leftExists = False
         rightExists = False
         internalExists = False
         if 'PRIMER_LEFT' in result['result']['pairs'][0]:
             leftExists = True
-            resultCSV[0].extend(['left_start', 'left_length', 'left_tm', 'left_gc', 'left_seq', 'left_hairpin_th', 'left_penalty', 'left_self_any_th', 'left_self_end_th', 'left_end_stability'])
+            resultCSV += ',left_start,left_length,left_tm,left_gc,left_seq,left_hairpin_th,left_penalty,left_self_any_th,left_self_end_th,left_end_stability'
         if 'PRIMER_RIGHT' in result['result']['pairs'][0]:
             rightExists = True
-            resultCSV[0].extend(['right_start', 'right_length', 'right_tm', 'right_gc', 'right_seq', 'right_hairpin_th', 'right_penalty', 'right_self_any_th', 'right_self_end_th', 'right_end_stability'])
+            resultCSV += ',right_start,right_length,right_tm,right_gc,right_seq,right_hairpin_th,right_penalty,right_self_any_th,right_self_end_th,right_end_stability'
         if 'PRIMER_INTERNAL' in result['result']['pairs'][0]:
             internalExists = True
-            resultCSV[0].extend(['internal_start', 'internal_length', 'internal_tm', 'internal_gc', 'internal_seq', 'internal_hairpin_th', 'internal_penalty', 'internal_self_any_th', 'internal_self_end_th'])
+            resultCSV += ',internal_start,internal_length,internal_tm,internal_gc,internal_seq,internal_hairpin_th,internal_penalty,internal_self_any_th,internal_self_end_th'
         
+        if 'all ok' in result['status']:
+            resultCSV += ',targets,off targets'
+        resultCSV += '\n'
+
         i = 1
         for pair in result['result']['pairs']:
-            pairInfo = [i, pair['PRODUCT_SIZE'], pair['PENALTY'], pair['COMPL_ANY_TH'], pair['COMPL_END_TH']]
+            resultCSV += "{},{},{},{},{}".format(i, pair['PRODUCT_SIZE'], pair['PENALTY'], pair['COMPL_ANY_TH'], pair['COMPL_END_TH'])
 
             if leftExists:
-                pairInfo.extend([pair['PRIMER_LEFT']['START'], pair['PRIMER_LEFT']['LENGTH'] , pair['PRIMER_LEFT']['TM'], pair['PRIMER_LEFT']['GC_PERCENT'], pair['PRIMER_LEFT']['SEQUENCE'], pair['PRIMER_LEFT']['HAIRPIN_TH'], pair['PRIMER_LEFT']['PENALTY'], pair['PRIMER_LEFT']['SELF_ANY_TH'], pair['PRIMER_LEFT']['SELF_END_TH'], pair['PRIMER_LEFT']['END_STABILITY']])
+                resultCSV += ",{},{},{},{},{},{},{},{},{},{}".format(pair['PRIMER_LEFT']['START'], pair['PRIMER_LEFT']['LENGTH'] , pair['PRIMER_LEFT']['TM'], pair['PRIMER_LEFT']['GC_PERCENT'], pair['PRIMER_LEFT']['SEQUENCE'], pair['PRIMER_LEFT']['HAIRPIN_TH'], pair['PRIMER_LEFT']['PENALTY'], pair['PRIMER_LEFT']['SELF_ANY_TH'], pair['PRIMER_LEFT']['SELF_END_TH'], pair['PRIMER_LEFT']['END_STABILITY'])
 
             if rightExists:
-                pairInfo.extend([pair['PRIMER_LEFT']['START'], pair['PRIMER_LEFT']['LENGTH'] , pair['PRIMER_LEFT']['TM'], pair['PRIMER_LEFT']['GC_PERCENT'], pair['PRIMER_LEFT']['SEQUENCE'], pair['PRIMER_LEFT']['HAIRPIN_TH'], pair['PRIMER_LEFT']['PENALTY'], pair['PRIMER_LEFT']['SELF_ANY_TH'], pair['PRIMER_LEFT']['SELF_END_TH'], pair['PRIMER_LEFT']['END_STABILITY']])
+                resultCSV += ",{},{},{},{},{},{},{},{},{},{}".format(pair['PRIMER_LEFT']['START'], pair['PRIMER_LEFT']['LENGTH'] , pair['PRIMER_LEFT']['TM'], pair['PRIMER_LEFT']['GC_PERCENT'], pair['PRIMER_LEFT']['SEQUENCE'], pair['PRIMER_LEFT']['HAIRPIN_TH'], pair['PRIMER_LEFT']['PENALTY'], pair['PRIMER_LEFT']['SELF_ANY_TH'], pair['PRIMER_LEFT']['SELF_END_TH'], pair['PRIMER_LEFT']['END_STABILITY'])
 
             if internalExists:
-                pairInfo.extend([pair['PRIMER_LEFT']['START'], pair['PRIMER_LEFT']['LENGTH'] , pair['PRIMER_LEFT']['TM'], pair['PRIMER_LEFT']['GC_PERCENT'], pair['PRIMER_LEFT']['SEQUENCE'], pair['PRIMER_LEFT']['HAIRPIN_TH'], pair['PRIMER_LEFT']['PENALTY'], pair['PRIMER_LEFT']['SELF_ANY_TH'], pair['PRIMER_LEFT']['SELF_END_TH']])
+                resultCSV += ",{},{},{},{},{},{},{},{},{}".format(pair['PRIMER_LEFT']['START'], pair['PRIMER_LEFT']['LENGTH'] , pair['PRIMER_LEFT']['TM'], pair['PRIMER_LEFT']['GC_PERCENT'], pair['PRIMER_LEFT']['SEQUENCE'], pair['PRIMER_LEFT']['HAIRPIN_TH'], pair['PRIMER_LEFT']['PENALTY'], pair['PRIMER_LEFT']['SELF_ANY_TH'], pair['PRIMER_LEFT']['SELF_END_TH'])
        
-            resultCSV.append(pairInfo)
+            if 'all ok' in result['status']:
+                resultCSV += ",{},{}".format(pair['targets'],pair['off_targets'])
+            resultCSV += '\n'
             i += 1
 
         return resultCSV
 
-    elif result['status'] == 'all ok':
-        resultCSV = [['primer pair', 'product size', 'penalty', 'any th', 'end th']]
 
-        leftExists = False
-        rightExists = False
-        internalExists = False
-        if 'PRIMER_LEFT' in result['result']['pairs'][0]:
-            leftExists = True
-            resultCSV[0].extend(['left_start', 'left_length', 'left_tm', 'left_gc', 'left_seq', 'left_hairpin_th', 'left_penalty', 'left_self_any_th', 'left_self_end_th', 'left_end_stability'])
-        if 'PRIMER_RIGHT' in result['result']['pairs'][0]:
-            rightExists = True
-            resultCSV[0].extend(['right_start', 'right_length', 'right_tm', 'right_gc', 'right_seq', 'right_hairpin_th', 'right_penalty', 'right_self_any_th', 'right_self_end_th', 'right_end_stability'])
-        if 'PRIMER_INTERNAL' in result['result']['pairs'][0]:
-            internalExists = True
-            resultCSV[0].extend(['internal_start', 'internal_length', 'internal_tm', 'internal_gc', 'internal_seq', 'internal_hairpin_th', 'internal_penalty', 'internal_self_any_th', 'internal_self_end_th'])
-        
-        resultCSV[0].extend(['targets', 'off targets'])
-
-        i = 1
-        for pair in result['result']['pairs']:
-            pairInfo = [i, pair['PRODUCT_SIZE'], pair['PENALTY'], pair['COMPL_ANY_TH'], pair['COMPL_END_TH']]
-
-            if leftExists:
-                pairInfo.extend([pair['PRIMER_LEFT']['START'], pair['PRIMER_LEFT']['LENGTH'] , pair['PRIMER_LEFT']['TM'], pair['PRIMER_LEFT']['GC_PERCENT'], pair['PRIMER_LEFT']['SEQUENCE'], pair['PRIMER_LEFT']['HAIRPIN_TH'], pair['PRIMER_LEFT']['PENALTY'], pair['PRIMER_LEFT']['SELF_ANY_TH'], pair['PRIMER_LEFT']['SELF_END_TH'], pair['PRIMER_LEFT']['END_STABILITY']])
-
-            if rightExists:
-                pairInfo.extend([pair['PRIMER_LEFT']['START'], pair['PRIMER_LEFT']['LENGTH'] , pair['PRIMER_LEFT']['TM'], pair['PRIMER_LEFT']['GC_PERCENT'], pair['PRIMER_LEFT']['SEQUENCE'], pair['PRIMER_LEFT']['HAIRPIN_TH'], pair['PRIMER_LEFT']['PENALTY'], pair['PRIMER_LEFT']['SELF_ANY_TH'], pair['PRIMER_LEFT']['SELF_END_TH'], pair['PRIMER_LEFT']['END_STABILITY']])
-
-            if internalExists:
-                pairInfo.extend([pair['PRIMER_LEFT']['START'], pair['PRIMER_LEFT']['LENGTH'] , pair['PRIMER_LEFT']['TM'], pair['PRIMER_LEFT']['GC_PERCENT'], pair['PRIMER_LEFT']['SEQUENCE'], pair['PRIMER_LEFT']['HAIRPIN_TH'], pair['PRIMER_LEFT']['PENALTY'], pair['PRIMER_LEFT']['SELF_ANY_TH'], pair['PRIMER_LEFT']['SELF_END_TH']])
-       
-            pairInfo.extend([pair['targets'], pair['off_targets']])
-
-            resultCSV.append(pairInfo)
-            i += 1
-
-        return resultCSV
-
-    return []
+    return ''
