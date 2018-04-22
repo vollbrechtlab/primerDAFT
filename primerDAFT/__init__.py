@@ -20,7 +20,7 @@ def run(task, configFile):
 
     """
 
-    result = {},
+    result = {}
     result['taskId'] = task['taskId']
 
     try: # try to get primer3 result
