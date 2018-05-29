@@ -64,7 +64,7 @@ def createCSV(result):
         if 'PRIMER_INTERNAL' in result['result']['pairs'][0]:
             internalExists = True
             resultCSV += ',internal_start,internal_length,internal_tm,internal_gc,internal_seq,internal_hairpin_th,internal_penalty,internal_self_any_th,internal_self_end_th'
-        
+
         if 'all ok' in result['status']:
             resultCSV += ',targets,off targets'
         resultCSV += '\n'
@@ -72,16 +72,19 @@ def createCSV(result):
         i = 1
         for pair in result['result']['pairs']:
             resultCSV += "{},{},{},{},{}".format(i, pair['PRODUCT_SIZE'], pair['PENALTY'], pair['COMPL_ANY_TH'], pair['COMPL_END_TH'])
-
+            primer_side=""
             if leftExists:
-                resultCSV += ",{},{},{},{},{},{},{},{},{},{}".format(pair['PRIMER_LEFT']['START'], pair['PRIMER_LEFT']['LENGTH'] , pair['PRIMER_LEFT']['TM'], pair['PRIMER_LEFT']['GC_PERCENT'], pair['PRIMER_LEFT']['SEQUENCE'], pair['PRIMER_LEFT']['HAIRPIN_TH'], pair['PRIMER_LEFT']['PENALTY'], pair['PRIMER_LEFT']['SELF_ANY_TH'], pair['PRIMER_LEFT']['SELF_END_TH'], pair['PRIMER_LEFT']['END_STABILITY'])
+                primer_side='PRIMER_LEFT'
+                resultCSV += ",{},{},{},{},{},{},{},{},{},{}".format(pair[primer_side]['START'], pair[primer_side]['LENGTH'] , pair[primer_side]['TM'], pair[primer_side]['GC_PERCENT'], pair[primer_side]['SEQUENCE'], pair[primer_side]['HAIRPIN_TH'], pair[primer_side]['PENALTY'], pair[primer_side]['SELF_ANY_TH'], pair[primer_side]['SELF_END_TH'], pair[primer_side]['END_STABILITY'])
 
             if rightExists:
-                resultCSV += ",{},{},{},{},{},{},{},{},{},{}".format(pair['PRIMER_LEFT']['START'], pair['PRIMER_LEFT']['LENGTH'] , pair['PRIMER_LEFT']['TM'], pair['PRIMER_LEFT']['GC_PERCENT'], pair['PRIMER_LEFT']['SEQUENCE'], pair['PRIMER_LEFT']['HAIRPIN_TH'], pair['PRIMER_LEFT']['PENALTY'], pair['PRIMER_LEFT']['SELF_ANY_TH'], pair['PRIMER_LEFT']['SELF_END_TH'], pair['PRIMER_LEFT']['END_STABILITY'])
+                primer_side='PRIMER_RIGHT'
+                resultCSV += ",{},{},{},{},{},{},{},{},{},{}".format(pair[primer_side]['START'], pair[primer_side]['LENGTH'] , pair[primer_side]['TM'], pair[primer_side]['GC_PERCENT'], pair[primer_side]['SEQUENCE'], pair[primer_side]['HAIRPIN_TH'], pair[primer_side]['PENALTY'], pair[primer_side]['SELF_ANY_TH'], pair[primer_side]['SELF_END_TH'], pair[primer_side]['END_STABILITY'])
 
             if internalExists:
-                resultCSV += ",{},{},{},{},{},{},{},{},{}".format(pair['PRIMER_LEFT']['START'], pair['PRIMER_LEFT']['LENGTH'] , pair['PRIMER_LEFT']['TM'], pair['PRIMER_LEFT']['GC_PERCENT'], pair['PRIMER_LEFT']['SEQUENCE'], pair['PRIMER_LEFT']['HAIRPIN_TH'], pair['PRIMER_LEFT']['PENALTY'], pair['PRIMER_LEFT']['SELF_ANY_TH'], pair['PRIMER_LEFT']['SELF_END_TH'])
-       
+                primer_side='PRIMER_INTERNAL'
+                resultCSV += ",{},{},{},{},{},{},{},{},{}".format(pair[primer_side]['START'], pair[primer_side]['LENGTH'] , pair[primer_side]['TM'], pair[primer_side]['GC_PERCENT'], pair[primer_side]['SEQUENCE'], pair[primer_side]['HAIRPIN_TH'], pair[primer_side]['PENALTY'], pair[primer_side]['SELF_ANY_TH'], pair[primer_side]['SELF_END_TH'])
+
             if 'all ok' in result['status']:
                 resultCSV += ",{},{}".format(pair['targets'],pair['off_targets'])
             resultCSV += '\n'
