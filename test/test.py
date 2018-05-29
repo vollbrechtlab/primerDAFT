@@ -2,30 +2,24 @@
 
 import primerDAFT
 from pprint import pprint
-import json
-
-def test1_specCheck():
-    result = primerDAFT.specCheck("test_task.json", "test_result.json")
-    pprint(result)
-
-def test_findPrimers():
-    taskFilePath = "test_task.json"
-    with open(taskFilePath) as taskFile:
-        taskData = json.load(taskFile)
-    result = primerDAFT.findPrimers(taskData['input_data'])
-    pprint(result)
+import json, os, csv
 
 def test_run():
-    taskFilePath = "test_data/test_task_maize.json"
-    # taskFilePath = "test_data/test_task.json"
-    with open(taskFilePath) as taskFile:
-        taskData = json.load(taskFile)
-    with open('cache/'+taskData['taskId']+'_task.json', 'w') as outfile:
-        json.dump(taskData, outfile)
-    configFile = "primer-dx.conf"
-    result = primerDAFT.run(taskData, configFile)
-    # pprint(result)
-    with open('cache/'+taskData['taskId']+'_result.json', 'w') as outfile:
-        json.dump(result, outfile,indent=4)
+    with open("C8nSJqbgGqrv5GUT_task.json", 'r') as f:
+        taskData = json.load(f)
+        #taskData['spec_check_data'] = None
+
+    result = primerDAFT.run(taskData, "pdaft.conf")
+    with open(taskData['taskId']+'_result.json', 'w') as f:
+        json.dump(result, f, indent=4)
+
+def test_createCSV():
+    with open("C8nSJqbgGqrv5GUT_result.json", 'r') as f:
+        result = json.load(f)
+
+    resultCSV = primerDAFT.createCSV(result)
+    with open(result['taskId']+'_result.csv', 'w') as f:
+        f.write(resultCSV)
 
 test_run()
+test_createCSV()

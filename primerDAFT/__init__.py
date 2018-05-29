@@ -1,16 +1,11 @@
 #!/usr/bin/env
-# this file makes the package
-"""
-Created on 29 July 2012
-@author: Lisa Simpson
-"""
 
 __all__ = ['designPrimers', 'specCheck']
 
-import os
+import os, json, sys
+
 from primerDAFT.designPrimers.findPrimers import findPrimers
 from primerDAFT.specCheck.specCheck import specCheck
-import json,sys
 
 def run(task, configFile):
     """ run findPrimers and specCheck
@@ -18,7 +13,7 @@ def run(task, configFile):
     Parameters
     ----------
         task (dic): task data
-        saveTmp (bool): true if user wants to save temporary files
+        configFile (string): config file path
 
     Returns:
         dict: result dictionary
@@ -26,29 +21,76 @@ def run(task, configFile):
     """
 
     result = {}
+    result['taskId'] = task['taskId']
 
     try: # try to get primer3 result
         if 'format' in task:
             result['result'] = findPrimers(task['primer3_data'], task['format'])
         else:
             result['result'] = findPrimers(task['primer3_data'])
-
     except Exception as e:
         result['status'] = 'error'
         result['error_statement'] = 'primer3_data is broken'
+        return result
 
-    else: # no problem for primer3
-        result['status'] = 'primer3 ok'
+    result['status'] = 'primer3 ok'
 
-        if task["spec_check"]["RUN_SPEC_CHECK"] == 1:
-            try:
-                specCheck_result = specCheck(task, result, configFile)
-            except Exception as e:
-                print(e)
-                result['status'] += ' speck check error'
-                result['error_statement'] = 'no match for this genome'
-            else:
-                result['status'] = 'all ok'
-                result["specCheck_result"] = specCheck_result['result']
+    if ('spec_check_data' in task) and (task['spec_check_data'] != None) and (task['spec_check_data']['RUN_SPEC_CHECK'] == 1):
+        try:
+            specCheck(task, result, configFile)
+        except Exception as e:
+            #print(e)
+            result['status'] += ' speck check error'
+            result['error_statement'] = 'no match for this genome'
+        else:
+            result['status'] = 'all ok'
 
     return result
+
+
+def createCSV(result):
+    if 'ok' in result['status']:
+        resultCSV = 'primer pair,product size,penalty,any th,end th'
+
+        leftExists = False
+        rightExists = False
+        internalExists = False
+        if 'PRIMER_LEFT' in result['result']['pairs'][0]:
+            leftExists = True
+            resultCSV += ',left_start,left_length,left_tm,left_gc,left_seq,left_hairpin_th,left_penalty,left_self_any_th,left_self_end_th,left_end_stability'
+        if 'PRIMER_RIGHT' in result['result']['pairs'][0]:
+            rightExists = True
+            resultCSV += ',right_start,right_length,right_tm,right_gc,right_seq,right_hairpin_th,right_penalty,right_self_any_th,right_self_end_th,right_end_stability'
+        if 'PRIMER_INTERNAL' in result['result']['pairs'][0]:
+            internalExists = True
+            resultCSV += ',internal_start,internal_length,internal_tm,internal_gc,internal_seq,internal_hairpin_th,internal_penalty,internal_self_any_th,internal_self_end_th'
+
+        if 'all ok' in result['status']:
+            resultCSV += ',targets,off targets'
+        resultCSV += '\n'
+
+        i = 1
+        for pair in result['result']['pairs']:
+            resultCSV += "{},{},{},{},{}".format(i, pair['PRODUCT_SIZE'], pair['PENALTY'], pair['COMPL_ANY_TH'], pair['COMPL_END_TH'])
+            primer_side=""
+            if leftExists:
+                primer_side='PRIMER_LEFT'
+                resultCSV += ",{},{},{},{},{},{},{},{},{},{}".format(pair[primer_side]['START'], pair[primer_side]['LENGTH'] , pair[primer_side]['TM'], pair[primer_side]['GC_PERCENT'], pair[primer_side]['SEQUENCE'], pair[primer_side]['HAIRPIN_TH'], pair[primer_side]['PENALTY'], pair[primer_side]['SELF_ANY_TH'], pair[primer_side]['SELF_END_TH'], pair[primer_side]['END_STABILITY'])
+
+            if rightExists:
+                primer_side='PRIMER_RIGHT'
+                resultCSV += ",{},{},{},{},{},{},{},{},{},{}".format(pair[primer_side]['START'], pair[primer_side]['LENGTH'] , pair[primer_side]['TM'], pair[primer_side]['GC_PERCENT'], pair[primer_side]['SEQUENCE'], pair[primer_side]['HAIRPIN_TH'], pair[primer_side]['PENALTY'], pair[primer_side]['SELF_ANY_TH'], pair[primer_side]['SELF_END_TH'], pair[primer_side]['END_STABILITY'])
+
+            if internalExists:
+                primer_side='PRIMER_INTERNAL'
+                resultCSV += ",{},{},{},{},{},{},{},{},{}".format(pair[primer_side]['START'], pair[primer_side]['LENGTH'] , pair[primer_side]['TM'], pair[primer_side]['GC_PERCENT'], pair[primer_side]['SEQUENCE'], pair[primer_side]['HAIRPIN_TH'], pair[primer_side]['PENALTY'], pair[primer_side]['SELF_ANY_TH'], pair[primer_side]['SELF_END_TH'])
+
+            if 'all ok' in result['status']:
+                resultCSV += ",{},{}".format(pair['targets'],pair['off_targets'])
+            resultCSV += '\n'
+            i += 1
+
+        return resultCSV
+
+
+    return ''

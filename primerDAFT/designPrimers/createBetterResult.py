@@ -22,7 +22,7 @@ def createBetterResult(result):
     for i in range(result['PRIMER_PAIR_NUM_RETURNED']):
         betterResult['pairs'][i]['COMPL_ANY_TH'] = result['PRIMER_PAIR_{}_COMPL_ANY_TH'.format(i)]
         betterResult['pairs'][i]['COMPL_END_TH'] = result['PRIMER_PAIR_{}_COMPL_END_TH'.format(i)]
-        betterResult['pairs'][i]['PENALLTY'] = result['PRIMER_PAIR_{}_PENALTY'.format(i)]
+        betterResult['pairs'][i]['PENALTY'] = result['PRIMER_PAIR_{}_PENALTY'.format(i)]
         betterResult['pairs'][i]['PRODUCT_SIZE'] = result['PRIMER_PAIR_{}_PRODUCT_SIZE'.format(i)]
 
     for i in range(result['PRIMER_LEFT_NUM_RETURNED']):
