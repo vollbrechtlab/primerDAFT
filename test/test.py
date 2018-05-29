@@ -5,7 +5,7 @@ from pprint import pprint
 import json, os, csv
 
 def test_run():
-    with open("C8nSJqbgGqrv5GUT_task.json", 'r') as f:
+    with open("task_data/C8nSJqbgGqrv5GUT_task.json", 'r') as f:
         taskData = json.load(f)
         #taskData['spec_check_data'] = None
 
