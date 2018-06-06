@@ -1,2 +1,7 @@
 fa
 *taskResult*
+*.ipy
+*.fa
+*.csv
+*_result.json
+*.bl.out
