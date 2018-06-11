@@ -39,7 +39,7 @@ def run(task, configFile):
         try:
             specCheck(task, result, configFile)
         except Exception as e:
-            #print(e)
+            print(e)
             result['status'] += ' speck check error'
             result['error_statement'] = 'no match for this genome'
         else:

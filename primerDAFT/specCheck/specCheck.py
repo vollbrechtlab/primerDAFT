@@ -129,8 +129,7 @@ def specCheck(task, result, configFile):
     try:
         off_target_data = get_off_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta)
     except Exception as e:
-
-        #print(e)
+        print(e)
         #traceback.print_exc()
         raise ValueError
     else:
@@ -149,6 +148,9 @@ def get_off_targets(df_filt,data,task_data,sel_cols,idx_col,pysam_fasta):
     c["size"] = c["sstart_left"]-c["sstart_right"]
     # off_targets = c[(abs(c.sstart_left-c.sstart_right)<task_data["spec_check_data"]["MAX_TARGET_SIZE"]) & (c.strand_left != c.strand_right)]
     off_targets = c[((c["size"]<=max_target_size) & (c["size"] > 0) & (c["strand_left"] == "-")) | ((c["size"]>=-1*max_target_size) & (c["size"] < 0) & (c["strand_left"] == "+")) & (c["strand_left"] != c["strand_right"])]
+
+    target_cols = ["sseqid"]
+    side_cols = ["sstart","send","strand","qstart","qend","length","qlen"]
 
     for x in list(pd.unique(off_targets["pair"])):
         x = int(x)
